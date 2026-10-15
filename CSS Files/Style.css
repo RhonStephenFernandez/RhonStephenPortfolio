@@ -1,0 +1,26 @@
+/* Basic CSS Resets and Typography */
+body {
+ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+ background-color: #f8f9fa;
+ color: #333333;
+ margin: 0;
+}
+/* Navigation Styling */
+nav {
+ background-color: #003366;
+ padding: 12px 20px;
+}
+nav a {
+ color: #ffffff;
+ text-decoration: none;
+ margin-right: 15px;
+ font-weight: bold;
+}
+/* Class Styling */
+.card {
+ background: #ffffff;
+ border: 1px solid #e0e0e0;
+ border-radius: 8px;
+ padding: 20px;
+ margin: 15px 0;
+}
