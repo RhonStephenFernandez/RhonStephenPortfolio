@@ -1,4 +1,9 @@
-       .navbar {
+*{
+    margin:0px;
+    padding:0px;
+    box-sizing:border-box;
+}
+.navbar {
  background-color: #660027; /* The primary BG color of the navigation bar */
  background-image: linear-gradient(#660027,#420019);
  width: 100%;
