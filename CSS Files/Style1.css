@@ -3,7 +3,7 @@
     padding:0px;
     box-sizing:border-box;
 }
-.navbar {
+       .navbar {
  background-color: #660027; /* The primary BG color of the navigation bar */
  background-image: linear-gradient(#660027,#420019);
  width: 100%;
@@ -43,7 +43,7 @@
 }
 /* 4. Keyboard focus state (Accessibility / WCAG compliance) */
 .nav-link:focus {
- outline: 3px solid #d3316f;
+ outline: 3px solid #9b2d57;
  outline-offset: -3px;
  background-color: #420019;
 }
@@ -71,8 +71,8 @@
   color: transparent;
   display: inline-block; 
   font-family: Arial;
+  font-size: 50px;
 }
-
 
 ALGORITHM RenderHorizontalMenu
 INPUT: MenuItemsList (Array of Objects containing Title, TargetURL, Controller,
