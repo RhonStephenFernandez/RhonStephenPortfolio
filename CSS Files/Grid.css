@@ -13,17 +13,25 @@ body{
 .box{
     background-color: #660027;
     background-image: linear-gradient(#660027,#420019);
-    font-size:2rem;
+    font-size:1rem;
     padding:0.5rem;
+    width: 100%;
+    max-width: 275px;
+    border-radius: 12px;
+
 }
 
 .container{
     display:grid;
-    min-height:400px;
+    min-height:200px;
     grid-auto-flow: column;
-    grid-template-columns: auto;
-            grid-template-rows: repeat(4, 1fr);
+    grid-template-columns: 3, 250px;
+    grid-template-rows: repeat(4, 1fr);
     gap: 1em;   
+    margin: 30px;
+    max-width: 1500px;
+    justify-content: center;
+
 }
 
 .link{
