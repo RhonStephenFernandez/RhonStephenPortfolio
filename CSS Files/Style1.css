@@ -21,7 +21,7 @@
 .nav-link {
  display: block; /* Expands clickable box to fill padding */
  padding: 14px 20px; /* Breathing room inside target box */
- color: #FFFFFF; /* High-contrast text color */
+ color: #ffffff; /* High-contrast text color */
  text-decoration: none; /* Removes standard underline */
  font-family: 'Segoe UI', sans-serif;
  font-size: 15px;
@@ -72,6 +72,47 @@
   display: inline-block; 
   font-family: Arial;
   font-size: 50px;
+  margin-top:25px;
+}
+
+.footerbg {
+  background-color: #660027;
+ background-image: linear-gradient(#9b2d57,#660027);
+ color: white;
+ text-align: center;
+ padding: 50px;
+ margin-top: 2000px;
+
+}
+
+.subfooter {
+   background-color: #660027;
+ background-image: linear-gradient(#47001b,#26000f);
+ color: white;
+ text-align: center;
+ padding: 15px;
+ 
+}
+
+.textPreset1 {
+    background-image: linear-gradient(90deg, #ffff, #ff4b90);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-stroke: 0.5px #000000;
+  color: transparent;
+  display: inline-block; 
+  font-family: Arial;
+    font-family: Arial;
+    outline: white;
+    text-decoration: none;
+}
+
+.socialsVertical {
+  
+}
+
+.socials {
+  background-image: linear-gradient(#000000, #50182d);
 }
 
 ALGORITHM RenderHorizontalMenu
