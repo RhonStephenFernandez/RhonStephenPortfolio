@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Save Grades</title>
+</head>
+<body>
+    <h1>Save Grades</h1>
+    
+    <label for="txtLRN">LRN</label>
+    <input type="text" id="txtLRN" name="txtLRN" minlength="11" maxlength="11"><br><br>
+
+    <label for="txtName">Name</label>
+    <input type="text" id="txtName" name="txtName" minlength="1" maxlength="50"><br><br>
+
+    <label for="txtSubject">Subject</label>
+    <input type="text" id="txtSubject" name="txtSubject" minlength="1" maxlength="50"><br><br>
+
+    <label for="txtGrade">Grade</label>
+    <input type="number" id="txtGrade" name="txtGrade" min="0" max="100"><br><br>
+
+    <input type="button" id="btnSave" name="btnSave" value="Submit">
+    <input type="button" id="btnClear" name="btnClear" value="Clear All"><br>
+    
+    <p id="message"></p>
+
+    <table border="2">
+        <thead>
+            <tr>
+                <th>LRN</th>
+                <th>Name</th>
+                <th>Subject</th>
+                <th>Grade</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody">
+        </tbody>
+    </table>
+
+    <script>
+        var txtLRN = document.getElementById("txtLRN");
+        var txtName = document.getElementById("txtName");
+        var txtSubject = document.getElementById("txtSubject");
+        var txtGrade = document.getElementById("txtGrade");
+        var btnSave = document.getElementById("btnSave");
+        var btnClear = document.getElementById("btnClear");
+        var message = document.getElementById("message");
+        var tableBody = document.getElementById("tableBody");
+
+        var grades = JSON.parse(localStorage.getItem("grades")) || [];
+
+        function showGrades() {
+            tableBody.textContent = "";
+            for (var i = 0; i < grades.length; i++) {
+                var row = tableBody.insertRow();
+                row.insertCell().textContent = grades[i].lrn;
+                row.insertCell().textContent = grades[i].name;
+                row.insertCell().textContent = grades[i].subject;
+                row.insertCell().textContent = grades[i].grade;
+            }
+        }
+
+        function saveGrade() {
+            var lrn = txtLRN.value.trim();
+            var name = txtName.value.trim();
+            var subject = txtSubject.value.trim();
+            var grade = txtGrade.value.trim();
+
+            if (lrn === "" || name === "" || subject === "" || grade === "") {
+                message.textContent = "Please fill in all the boxes.";
+                return;
+            }        
+
+            var record = { lrn: lrn, name: name, subject: subject, grade: grade };
+            
+            grades.push(record);
+            localStorage.setItem("grades", JSON.stringify(grades));
+
+            message.textContent = "Saved successfully.";
+
+            txtLRN.value = "";
+            txtName.value = "";
+            txtSubject.value = "";
+            txtGrade.value = "";
+
+            showGrades();
+        }
+
+        function clearStorage() {
+            if (grades.length === 0) {
+                message.textContent = "The table is already empty.";
+                return;
+            }
+
+            if (confirm("Are you sure you want to delete all saved grades?")) {
+                localStorage.removeItem("grades");
+                grades = [];
+                showGrades();
+
+                message.textContent = "All records have been cleared.";
+            }
+        }
+
+        btnSave.addEventListener("click", saveGrade);
+        btnClear.addEventListener("click", clearStorage);
+
+        showGrades();
+    </script>
+</body>
+</html>
