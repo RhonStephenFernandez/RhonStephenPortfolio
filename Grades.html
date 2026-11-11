@@ -32,6 +32,7 @@
                 <th>Name</th>
                 <th>Subject</th>
                 <th>Grade</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody id="tableBody">
@@ -50,6 +51,8 @@
 
         var grades = JSON.parse(localStorage.getItem("grades")) || [];
 
+        var selectedIndex = -1;
+
         function showGrades() {
             tableBody.textContent = "";
             for (var i = 0; i < grades.length; i++) {
@@ -58,7 +61,30 @@
                 row.insertCell().textContent = grades[i].name;
                 row.insertCell().textContent = grades[i].subject;
                 row.insertCell().textContent = grades[i].grade;
+
+                var actionCell = row.insertCell();
+                actionCell.appendChild(makeUpdateButton(i));
             }
+        }
+
+        function makeUpdateButton(index) {
+            var button = document.createElement("button");
+            button.textContent = "Update"
+            button.addEventListener("click", function () {
+            loadForUpdate(index);
+            })
+
+            return button;
+        }
+
+        function loadForUpdate(index) {
+            selectedIndex= index;
+            txtLRN.value = grades[index].lrn;
+            txtName.value = grades[index].name;
+            txtSubject.value = grades[index].subject;
+            txtGrade.value = grades[index].grade;
+            btnSave.value = "Update"
+            message.textContent = "Change the values, then click the Update button above the table.";
         }
 
         function saveGrade() {
@@ -74,10 +100,18 @@
 
             var record = { lrn: lrn, name: name, subject: subject, grade: grade };
             
-            grades.push(record);
+            if (selectedIndex === -1) {
+                grades.push(record);
+                message.textContent = "Saved successfully.";
+            } else {
+                grades[selectedIndex] = record;
+                message.textContent = "Updated successfully.";
+                selectedIndex = -1;
+                btnSave.value = "Submit";
+            }
+
             localStorage.setItem("grades", JSON.stringify(grades));
 
-            message.textContent = "Saved successfully.";
 
             txtLRN.value = "";
             txtName.value = "";
