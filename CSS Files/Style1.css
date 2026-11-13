@@ -61,27 +61,44 @@
 
 .myFont {
  font-family: Arial;
+ background-image: linear-gradient(90deg, #ff2579, #ffffff);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-stroke: 1px #000000;
+  color: transparent;
 }
 
 .gradientTextHeader {
-  background-image: linear-gradient(90deg, #c5396f, #9b2d57);
+  background-image: linear-gradient(90deg, #ff2579, #ffffff);
   background-clip: text;
   -webkit-background-clip: text;
-  -webkit-text-stroke: 0.5px #000000;
+  -webkit-text-stroke: 2px #000000;
   color: transparent;
   display: inline-block; 
   font-family: Arial;
   font-size: 50px;
   margin-top:25px;
+  border: 2px solid #ff4b90;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  
+}
+
+footer{
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  z-index: 1000;
 }
 
 .footerbg {
   background-color: #660027;
  background-image: linear-gradient(#9b2d57,#660027);
- color: white;
+ color: rgb(255, 255, 255);
  text-align: center;
  padding: 50px;
  margin-top: 2000px;
+ height:auto;
 
 }
 
@@ -105,6 +122,30 @@
     font-family: Arial;
     outline: white;
     text-decoration: none;
+}
+
+.link{
+    background-image: linear-gradient(90deg, #ffff, #ff4b90);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-stroke: 0.5px #000000;
+  color: transparent;
+  display: inline-block; 
+  font-family: Arial;
+    font-family: Arial;
+    outline: white;
+    text-decoration: none;
+}
+
+body{
+  background-image: url(Fernandez/images/sunset-retrowave-palm-tree-digital-art-4k-wallpaper-uhdpaper.com-838@3@a.jpg);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  padding-bottom: 0px;
+  min-height: 100vh;
+  margin: 0;
 }
 
 .socialsVertical {
