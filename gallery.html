@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gallery
-    </title>  
-    <link rel="stylesheet" href="https://rhonstephenfernandez.github.io/RhonStephenPortfolio/CSS%20Files/Style1.css">
+    <title>Landing Page</title>  
+    <link rel="stylesheet" href="CSS Files/Style1.css">
+    <link rel="stylesheet" href="CSS Files/Gallery.css">
 </head>
 <body>
-    
-     <style>
+
+    <style>
         body {font-family: 'Segoe UI', Tahoma, Geneva, sans-serif;
  margin: 0;
  background-image: url(images/sunset-retrowave-palm-tree-digital-art-4k-wallpaper-uhdpaper.com-838@3@a.jpg);
@@ -17,23 +17,128 @@
  background-size: cover;
  margin: 0;
  min-height: 100;
- color: #ffffff;
+ color: #2c3e50;
     }
     </style>
-    
+
     <nav class="navbar" role="navigation" aria-label="Main Navigation"> 
         <ul class="nav-list"> 
-            <li class="nav-item"><a class="nav-link" href="https://rhonstephenfernandez.github.io/RhonStephenPortfolio/index.html">Home</a></li> 
-            <li class="nav-item"><a class="nav-link" href="https://rhonstephenfernandez.github.io/RhonStephenPortfolio/about.html">About</a></li> 
-            <li class="nav-item"><a class="nav-link active" href="https://rhonstephenfernandez.github.io/RhonStephenPortfolio/gallery.html">Gallery</a></li> 
-            <li class="nav-item"><a class="nav-link" href="https://rhonstephenfernandez.github.io/RhonStephenPortfolio/portfolio.html">Portfolio</a></li> 
-            <li class="nav-item"><a class="nav-link" href="https://rhonstephenfernandez.github.io/RhonStephenPortfolio/contact.html">Contact</a></li>
+            <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li> 
+            <li class="nav-item"><a class="nav-link" href="about.html">About</a></li> 
+            <li class="nav-item"><a class="nav-link active" href="gallery.html">Gallery</a></li> 
+            <li class="nav-item"><a class="nav-link" href="portfolio.html">Portfolio</a></li> 
+            <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
     </nav>
     <center>
         <h1 class = "gradientTextHeader">Gallery</h1>
         <h2 class = "myFont">Gallery page</h2>
         <br>
-        <img src="images/b205040116f4dab983154169c9b53c1d77f75002dfc5a6a4ca68de1d76daf499.gif" alt="Dancin'" style="display: block; margin: 0 auto;">
-    </center>
+        <div class="carousel" id="carousel"> 
+      <div class="slides"> 
+        <figure class="slide"> 
+          <img src="gallery/galleryimagesHSR/image.gif" alt="Describe image 1"> 
+          <figcaption>PLACEHOLDER 1 (To be changed)</figcaption> 
+        </figure> 
+        <figure class="slide"> 
+          <img src="gallery/galleryimagesHSR/image (3).gif" alt="Describe image 2"> 
+          <figcaption>PLACEHOLDER 2 (To be changed)</figcaption> 
+        </figure> 
+        <figure class="slide"> 
+          <img src="gallery/galleryimagesHSR/image (2).gif" alt="Describe image 3"> 
+          <figcaption>PLACEHOLDER 3 (To be changed)</figcaption> 
+        </figure> 
+        <figure class="slide"> 
+          <img src="gallery/galleryimagesHSR/Honka Star Rail Honkai GIF - Honka star rail Honkai Hsr - Discover & Share GIFs.gif" alt="Describe image 4"> 
+          <figcaption>PLACEHOLDER 4 (To be changed)</figcaption> 
+        </figure> 
+  
+        <button class="nav prev" type="button" aria-label="Previous 
+slide">&#10094;</button>
+
+   <button class="nav next" type="button" aria-label="Next slide">&#10095;</button> 
+      </div> 
+  
+      <div class="dots"></div> 
+    </div> 
+  
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script> 
+    <script> 
+    $(document).ready(function () { 
+  
+      // 1. Cache elements and settings 
+      const $carousel = $("#carousel"); 
+      const $slides   = $carousel.find(".slide"); 
+      const $dotsBox  = $carousel.find(".dots"); 
+      const total     = $slides.length; 
+      const FADE_TIME = 500;      // milliseconds 
+      const DELAY     = 4000;     // time between automatic slides 
+      let current     = 0;        // index of the visible slide 
+      let timer       = null;     // holds the autoplay timer 
+  
+      // 2. Initial state: show only the first slide 
+      $slides.hide().eq(0).show(); 
+  
+      // 3. Create one dot per slide 
+      $slides.each(function (i) { 
+        $("<button>") 
+          .attr({ type: "button", "aria-label": "Go to slide " + (i + 1) }) 
+          .addClass("dot" + (i === 0 ? " active" : "")) 
+          .data("index", i) 
+          .appendTo($dotsBox); 
+      }); 
+      const $dots = $dotsBox.find(".dot"); 
+  
+      // 4. Show a specific slide 
+      function showSlide(index) { 
+        if (index === current) return;                     // nothing to do 
+  
+        $slides.eq(current).stop(true, true).fadeOut(FADE_TIME); 
+        $slides.eq(index).stop(true, true).fadeIn(FADE_TIME); 
+        $dots.removeClass("active").eq(index).addClass("active"); 
+  
+        current = index; 
+      } 
+  
+      function nextSlide() { showSlide((current + 1) % total); } 
+      function prevSlide() { showSlide((current - 1 + total) % total); } 
+  
+      // 5. Controls 
+      $carousel.on("click", ".next", nextSlide); 
+      $carousel.on("click", ".prev", prevSlide); 
+      $dotsBox.on("click", ".dot", function () { 
+        showSlide($(this).data("index")); 
+      }); 
+  
+      // 6. Autoplay (pauses on hover) 
+      function startAutoplay() { 
+        stopAutoplay();                                    // avoid duplicate timers 
+        timer = setInterval(nextSlide, DELAY); 
+      } 
+      function stopAutoplay() { 
+        clearInterval(timer); 
+      } 
+      $carousel.on("mouseenter", stopAutoplay)
+
+                     .on("mouseleave", startAutoplay); 
+      startAutoplay(); 
+  
+      // 7. Keyboard control 
+      $(document).on("keydown", function (event) { 
+        if (event.key === "ArrowRight") { 
+          nextSlide(); 
+        } else if (event.key === "ArrowLeft") { 
+          prevSlide(); 
+        } 
+      }); 
+  
+    }); 
+    </script> 
 </body>
+<footer>
+    <p class="footerbg">Thank you for visiting my website! Connect with me on social media or reach out via email for collaborations and inquiries. Your support and feedback are greatly appreciated.</p>
+
+    <p class="socials"><a href="https://github.com/RhonStephenFernandez" class="link"><b>Github</b></a></div></a></p>
+    <p class="subfooter"><b><a class="textPreset1">2026 TechCooper Solutions | Teacher: Ma'am Jovy</a></b></p>
+</footer>
+</center>
 </html>
