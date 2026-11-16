@@ -154,6 +154,7 @@ body{
 
 .socials {
   background-image: linear-gradient(#000000, #50182d);
+  text-align: center;
 }
 
 ALGORITHM RenderHorizontalMenu
