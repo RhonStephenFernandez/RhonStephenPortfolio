@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas</title>
+
+    <style>
+        #myDrawing{
+            border:solid 5px green;
+        }
+
+        body {
+        margin: 0;
+        height: 100vh;
+        display: grid;
+        place-items: center;
+        }
+    </style>
+
+</head>
+<body>
+    <canvas height ="500" width="1000" id="myDrawing">
+
+    </canvas>
+
+
+    <script>
+        const canvas = document.getElementById("myDrawing");
+        const ctx = canvas.getContext("2d");
+
+        ctx.beginPath();
+        ctx.moveTo(500, 50); // Move the pen to (30, 50)
+        ctx.lineTo(400, 200);
+        ctx.lineTo(600, 200);
+        ctx.lineTo(500, 50);
+        
+
+        ctx.fillStyle = '#006400'; 
+        ctx.fill(); 
+
+        ctx.strokeStyle = '#006400'; // Sets line color to Red
+        ctx.lineWidth = 3;
+        ctx.stroke();
+
+        
+        ctx.beginPath();
+        ctx.moveTo(500, 150); // Move the pen to (30, 50)
+        ctx.lineTo(375, 275);
+        ctx.lineTo(625, 275);
+        ctx.lineTo(500, 150);
+
+
+        ctx.fillStyle = '#006400'; 
+        ctx.fill(); 
+
+
+
+
+        ctx.stroke(); // Render the path
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = '#006400'; // Sets line color to Red
+
+        ctx.beginPath();
+        ctx.moveTo(500, 200); // Move the pen to (30, 50)
+        ctx.lineTo(375, 350);
+        ctx.lineTo(625, 350);
+        ctx.lineTo(500, 200);
+
+
+        ctx.fillStyle = '#006400'; 
+        ctx.fill(); 
+
+
+
+
+        ctx.stroke(); // Render the path
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = '#895129 '; // Sets line color to Red
+
+        ctx.beginPath();
+        ctx.moveTo(500, 300); // Move the pen to (30, 50)
+        ctx.lineTo(450, 450);
+        ctx.lineTo(550, 450);
+        ctx.lineTo(500, 300);
+
+
+        ctx.fillStyle = '#895129 '; 
+        ctx.fill(); 
+
+
+
+
+        ctx.stroke();
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = '#006400';
+        ctx.beginPath();
+         ctx.arc(500, 100, 10, 0, Math.PI * 2);
+        ctx.fillStyle = '#2196F3';
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(550, 170, 10, 0, Math.PI * 2);
+        ctx.fillStyle = '#FFD700';
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(450, 170, 10, 0, Math.PI * 2);
+        ctx.fillStyle = '#FF0000';
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(500, 200, 10, 0, Math.PI * 2);
+        ctx.fillStyle = '#E8E4C9';
+        ctx.fill();
+
+        ctx.endPath();
+
+
+
+
+
+    </script>
+</body>
+</html>
