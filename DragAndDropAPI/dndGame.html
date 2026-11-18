@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulated Universe: Aeon Alignment</title>
+    <!-- Google Fonts: Cinzel for cosmic/mythic headers, Rajdhani for crisp sci-fi HUD UI -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../CSS Files/dndGame.css">
+</head>
+<body>
+    <canvas id="starfield-canvas"></canvas>
+    <div class="nebula-overlay"></div>
+
+    <div class="app-container">
+        <header class="hud-header">
+            <div class="title-block">
+                <svg class="astral-emblem" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="32" cy="32" r="28" stroke-dasharray="4 4" opacity="0.6"/>
+                    <circle cx="32" cy="32" r="20"/>
+                    <polygon points="32,4 37,27 60,32 37,37 32,60 27,37 4,32 27,27" fill="currentColor" fill-opacity="0.2"/>
+                    <circle cx="32" cy="32" r="4" fill="currentColor"/>
+                </svg>
+                <div class="title-text">
+                    <div class="subtitle">Simulated Universe // Data Bank</div>
+                    <h1>Aeon &amp; Path Resonance</h1>
+                </div>
+            </div>
+
+            <div class="hud-stats">
+                <div class="stat-box">
+                    <span class="stat-label">Resonance Score</span>
+                    <span class="stat-value gold" id="score-display">0</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">Streak</span>
+                    <span class="stat-value cyan" id="streak-display">x1.0</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">Aligned</span>
+                    <span class="stat-value" id="progress-display">0 / 12</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">Elapsed</span>
+                    <span class="stat-value" id="timer-display">00:00</span>
+                </div>
+            </div>
+
+            <div class="hud-controls">
+                <button id="mode-toggle-btn" class="hsr-btn" title="Toggle Lore Hints">
+                    <span>Mode: Normal</span>
+                </button>
+                <button id="reset-btn" class="hsr-btn" title="Reset Simulation">
+                    <span>↻ Reset</span>
+                </button>
+            </div>
+        </header>
+
+        <div id="status-banner" class="status-banner">
+            <span>Drag an Aeon from the Cosmic Roster onto its corresponding Path—or tap an Aeon then tap a Path.</span>
+        </div>
+
+        <main class="game-workspace">
+            <section class="panel-section">
+                <div class="section-header">
+                    <h2 class="section-title">Aeon Entities</h2>
+                    <span class="section-tag" id="remaining-tag">12 Unaligned</span>
+                </div>
+                <div class="aeon-grid" id="aeon-roster">
+                </div>
+            </section>
+
+            <section class="panel-section">
+                <div class="section-header">
+                    <h2 class="section-title">Primum Mobile // Paths</h2>
+                    <span class="section-tag">Drop Targets</span>
+                </div>
+                <div class="paths-grid" id="paths-board">
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div class="modal-backdrop" id="victory-modal">
+        <div class="victory-modal">
+            <div class="modal-subtitle">Simulated Universe Synchronization Complete</div>
+            <h2 class="modal-title">All Aeons Aligned</h2>
+            <div class="modal-rank-badge" id="final-rank">Rank: Pathstrider</div>
+
+            <div class="results-grid">
+                <div class="result-item">
+                    <span class="label">Final Score</span>
+                    <span class="val gold" id="final-score">0</span>
+                </div>
+                <div class="result-item">
+                    <span class="label">Accuracy</span>
+                    <span class="val cyan" id="final-accuracy">100%</span>
+                </div>
+                <div class="result-item">
+                    <span class="label">Time Elapsed</span>
+                    <span class="val" id="final-time">00:00</span>
+                </div>
+                <div class="result-item">
+                    <span class="label">Max Streak</span>
+                    <span class="val gold" id="final-max-streak">0</span>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button class="hsr-btn-primary" id="play-again-btn">Initialize New Run</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const AEON_DATA = [
+            {
+                id: 'nanook',
+                name: 'Nanook',
+                epithet: 'The Ruin Author',
+                path: 'Destruction',
+                hint: 'Born from the ashes of Adlivun; seeks the entropy and annihilation of the universe.',
+                svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2">
+                        <polygon points="24,4 42,38 6,38"/>
+                        <line x1="24" y1="14" x2="24" y2="44"/>
+                        <circle cx="24" cy="28" r="5" fill="currentColor"/>
+                      </svg>`
+            },
+            {
+                id: 'lan',
+                name: 'Lan',
+                epithet: 'The Reignbow Arbiter',
+                path: 'The Hunt',
+                hint: 'Wields the Lux Arrow across the cosmos in endless, decisive vengeance against abominations.',
+                svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2">
+                        <path d="M10 36 C10 16, 38 16, 38 36"/>
+                        <line x1="24" y1="6" x2="24" y2="42"/>
+                        <polyline points="17,13 24,6 31,13"/>
+                      </svg>`
+            },
+            {
+                id: 'nous',
+                name: 'Nous',
+                epithet: 'The Wisomwalker',
+                path: 'Erudition',
+                hint: 'An astral computer ascended to godhood, calculating the ultimate answers to all cosmic enigmas.',
+                svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2">
+                        <circle cx="24" cy="24" r="14"/>
+                        <circle cx="24" cy="24" r="5" fill="currentColor"/>
+                        <line x1="24" y1="4" x2="24" y2="10"/>
+                        <line x1="24" y1="38" x2="24" y2="44"/>
+                        <line x1="4" y1="24" x2="10" y2="24"/>
+                        <line x1="38" y1="24" x2="44" y2="24"/>
+                      </svg>`
+            },
+            {
+                id: 'xipe',
+                name: 'Xipe',
+                epithet: 'The Triple-Faced Soul',
+                path: 'Harmony',
+                hint: 'A celestial chorus of thousand-faced unity, advocating joy, peace, and collective resonance.',
+                svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2">
+                        <polygon points="24,6 39,15 39,33 24,42 9,33 9,15"/>
+                        <circle cx="24" cy="24" r="7"/>
+                        <line x1="24" y1="6" x2="24" y2="17"/>
+                        <line x1="39" y1="33" x2="30" y2="28"/>
+                        <line x1="9" y1="33" x2="18" y2="28"/>
+                      </svg>`
+            },
+            {
+                id: 'ix',
+                name: 'IX',
+                epithet: 'Sleeping & Shapeless',
+                path: 'Nihility',
+                hint: 'A silent, languid shadow-blob who believes the multiverse holds zero ultimate meaning.',
+                svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2">
+                        <circle cx="24" cy="24" r="13" fill="currentColor" fill-opacity="0.25"/>
+                        <ellipse cx="24" cy="24" rx="20" ry="6" transform="rotate(-20 24 24)"/>
+                        <circle cx="20" cy="22" r="1.5" fill="currentColor"/>
+                        <circle cx="28" cy="22" r="1.5" fill="currentColor"/>
+                      </svg>`
+            },
+            {
+                id: 'qlipoth',
+                name: 'Qlipoth',
+                epithet: 'The Amber Lord',
+                path: 'Preservation',
+                hint: 'Forges the Subspace Crystalline Barrier with a colossal hammer to shield worlds from calamity.',
+                svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2">
+                        <path d="M10 10 L38 10 L38 26 C38 36 24 42 24 42 C24 42 10 36 10 26 Z"/>
+                        <polygon points="24,16 31,24 24,32 17,24" fill="currentColor" fill-opacity="0.3"/>
+                      </svg>`
+            },
+            {
+                id: 'yaoshi',
+                name: 'Yaoshi',
+                epithet: 'The Plagues Author',
+                path: 'Abundance',
+                hint: 'Bestows endless vitality and immortality, refusing to let any living blossom wither.',
+                svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2">
+                        <path d="M24 42 L24 12"/>
+                        <path d="M24 30 C14 30 12 20 24 18"/>
+                        <path d="M24 26 C34 26 36 16 24 14"/>
+                        <circle cx="24" cy="9" r="3" fill="currentColor"/>
+                      </svg>`
+            },
+            {
+                id: 'aha',
+                name: 'Aha',
+                epithet: 'The Laughter',
+                path: 'Elation',
+                hint: 'Climbed the Imaginary Tree, laughed at the absurdity of existence, and seeks pure theatrical chaos.',
+                svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2">
+                        <circle cx="24" cy="24" r="16"/>
+                        <path d="M16 20 L19 17 L22 20"/>
+                        <path d="M26 20 L29 17 L32 20"/>
+                        <path d="M15 27 Q24 37 33 27 Z" fill="currentColor" fill-opacity="0.25"/>
+                      </svg>`
+            },
+            {
+                id: 'fuli',
+                name: 'Fuli',
+                epithet: 'The Sky Father',
+                path: 'Remembrance',
+                hint: 'Records every fleeting thought and crystalized memory so the universe may be reborn after ruin.',
+                svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2">
+                        <polygon points="24,4 38,24 24,44 10,24"/>
+                        <polygon points="24,12 32,24 24,36 16,24" fill="currentColor" fill-opacity="0.25"/>
+                        <circle cx="24" cy="24" r="2.5" fill="currentColor"/>
+                      </svg>`
+            },
+            {
+                id: 'akivili',
+                name: 'Akivili',
+                epithet: 'The Cloudstrider',
+                path: 'Trailblaze',
+                hint: 'Left the isolated world of Pegana to chart the Star Rail and connect unknown civilizations.',
+                svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2">
+                        <polygon points="24,4 29,19 44,24 29,29 24,44 19,29 4,24 19,19"/>
+                        <circle cx="24" cy="24" r="4" fill="currentColor"/>
+                      </svg>`
+            },
+            {
+                id: 'terminus',
+                name: 'Terminus',
+                epithet: 'The End of All Things',
+                path: 'Finality',
+                hint: 'An apparition moving backward through time, murmuring prophecies of the cosmos’ inevitable end.',
+                svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2">
+                        <polygon points="12,8 36,8 24,24"/>
+                        <polygon points="12,40 36,40 24,24" fill="currentColor" fill-opacity="0.25"/>
+                        <line x1="10" y1="8" x2="38" y2="8"/>
+                        <line x1="10" y1="40" x2="38" y2="40"/>
+                      </svg>`
+            },
+            {
+                id: 'ouroboros',
+                name: 'Ouroboros',
+                epithet: 'The Beast of Calamity',
+                path: 'Voracity',
+                hint: 'An ancient Leviathan-Aeon with an insatiable void-maw that devours stars and worlds alike.',
+                svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2">
+                        <path d="M24 8 A16 16 0 1 1 10 32"/>
+                        <polygon points="10,32 6,24 16,26" fill="currentColor"/>
+                        <circle cx="24" cy="24" r="7" stroke-dasharray="3 3"/>
+                      </svg>`
+            }
+        ];
+
+        const state = {
+            score: 0,
+            streak: 0,
+            maxStreak: 0,
+            matchedCount: 0,
+            totalAttempts: 0,
+            correctAttempts: 0,
+            selectedAeonId: null,     
+            draggedAeonId: null,      
+            hardcoreMode:false,      
+            timerSeconds: 0,
+            timerInterval: null,
+            isGameOver: false
+        };
+
+        const rosterEl = document.getElementById('aeon-roster');
+        const pathsBoardEl = document.getElementById('paths-board');
+        const scoreDisplayEl = document.getElementById('score-display');
+        const streakDisplayEl = document.getElementById('streak-display');
+        const progressDisplayEl = document.getElementById('progress-display');
+        const timerDisplayEl = document.getElementById('timer-display');
+        const remainingTagEl = document.getElementById('remaining-tag');
+        const statusBannerEl = document.getElementById('status-banner');
+        const modeToggleBtn = document.getElementById('mode-toggle-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const victoryModalEl = document.getElementById('victory-modal');
+        const playAgainBtn = document.getElementById('play-again-btn');
+
+        function shuffleArray(array) {
+            const arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function formatTime(secs) {
+            const mins = Math.floor(secs / 60).toString().padStart(2, '0');
+            const remSecs = (secs % 60).toString().padStart(2, '0');
+            return `${mins}:${remSecs}`;
+        }
+
+        function setStatusMessage(text, type = '') {
+            statusBannerEl.innerHTML = `<span>${text}</span>`;
+            statusBannerEl.className = 'status-banner';
+            if (type) statusBannerEl.classList.add(`highlight-${type}`);
+        }
+
+        function spawnScoreFloater(x, y, text, color) {
+            const floater = document.createElement('div');
+            floater.className = 'score-floater';
+            floater.textContent = text;
+            floater.style.left = `${x}px`;
+            floater.style.top = `${y}px`;
+            floater.style.color = color;
+            document.body.appendChild(floater);
+            setTimeout(() => floater.remove(), 1000);
+        }
+
+        function updateHUD() {
+            scoreDisplayEl.textContent = state.score.toLocaleString();
+            const multiplier = (1 + state.streak * 0.25).toFixed(2);
+            streakDisplayEl.textContent = `x${multiplier}`;
+            progressDisplayEl.textContent = `${state.matchedCount} / ${AEON_DATA.length}`;
+            const remaining = AEON_DATA.length - state.matchedCount;
+            remainingTagEl.textContent = `${remaining} Unaligned`;
+        }
+
+        function startTimer() {
+            stopTimer();
+            state.timerSeconds = 0;
+            timerDisplayEl.textContent = '00:00';
+            state.timerInterval = setInterval(() => {
+                if (!state.isGameOver) {
+                    state.timerSeconds++;
+                    timerDisplayEl.textContent = formatTime(state.timerSeconds);
+                }
+            }, 1000);
+        }
+
+        function stopTimer() {
+            if (state.timerInterval) {
+                clearInterval(state.timerInterval);
+                state.timerInterval = null;
+            }
+        }
+
+        function initGame() {
+            state.score = 0;
+            state.streak = 0;
+            state.maxStreak = 0;
+            state.matchedCount = 0;
+            state.totalAttempts = 0;
+            state.correctAttempts = 0;
+            state.selectedAeonId = null;
+            state.draggedAeonId = null;
+            state.isGameOver = false;
+
+            victoryModalEl.classList.remove('active');
+            updateHUD();
+            setStatusMessage('Drag an Aeon from the Cosmic Roster onto its corresponding Path—or tap an Aeon then tap a Path.');
+            startTimer();
+
+            rosterEl.innerHTML = '';
+            pathsBoardEl.innerHTML = '';
+
+            const shuffledAeons = shuffleArray(AEON_DATA);
+            const shuffledPaths = shuffleArray(AEON_DATA);
+
+            shuffledAeons.forEach(aeon => {
+                const card = document.createElement('div');
+                card.className = 'aeon-card';
+                card.draggable = true;
+                card.dataset.aeonId = aeon.id;
+                card.innerHTML = `
+                    <div class="aeon-sigil">${aeon.svg}</div>
+                    <div class="aeon-name">${aeon.name}</div>
+                    <div class="aeon-epithet">${aeon.epithet}</div>
+                `;
+
+                card.addEventListener('dragstart', (e) => {
+                    state.draggedAeonId = aeon.id;
+                    selectAeonCard(aeon.id);
+                    card.classList.add('dragging');
+                    e.dataTransfer.setData('text/plain', aeon.id);
+                    e.dataTransfer.effectAllowed = 'move';
+                });
+
+                card.addEventListener('dragend', () => {
+                    card.classList.remove('dragging');
+                    state.draggedAeonId = null;
+                });
+
+                card.addEventListener('click', () => {
+                    if (state.selectedAeonId === aeon.id) {
+                        clearSelection();
+                    } else {
+                        selectAeonCard(aeon.id);
+                        setStatusMessage(`Selected <strong>${aeon.name}</strong> (${aeon.epithet}). Now select a Path drop zone to align.`, 'cyan');
+                    }
+                });
+
+                rosterEl.appendChild(card);
+            });
+
+            shuffledPaths.forEach(item => {
+                const slot = document.createElement('div');
+                slot.className = 'path-slot';
+                slot.dataset.targetAeonId = item.id;
+                slot.dataset.pathName = item.path;
+                slot.innerHTML = `
+                    <div>
+                        <div class="path-header">
+                            <span class="path-title">${item.path}</span>
+                            <span class="path-status-badge">Unbound</span>
+                        </div>
+                        <p class="path-hint">${item.hint}</p>
+                    </div>
+                    <div class="drop-placeholder">Drop or Tap to Align Aeon</div>
+                `;
+
+                slot.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    if (!slot.classList.contains('matched')) {
+                        slot.classList.add('drag-over');
+                    }
+                });
+
+                slot.addEventListener('dragleave', () => {
+                    slot.classList.remove('drag-over');
+                });
+
+                slot.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    slot.classList.remove('drag-over');
+                    if (slot.classList.contains('matched')) return;
+
+                    const droppedId = e.dataTransfer.getData('text/plain') || state.draggedAeonId;
+                    if (droppedId) {
+                        const rect = slot.getBoundingClientRect();
+                        evaluateAlignment(droppedId, slot, rect.left + rect.width / 2, rect.top + rect.height / 2);
+                    }
+                });
+
+                slot.addEventListener('click', (e) => {
+                    if (slot.classList.contains('matched')) return;
+                    if (!state.selectedAeonId) {
+                        setStatusMessage(`Select an Aeon entity first before attempting to bind the Path of <strong>${item.path}</strong>.`, 'cyan');
+                        return;
+                    }
+                    const rect = slot.getBoundingClientRect();
+                    const x = e.clientX || (rect.left + rect.width / 2);
+                    const y = e.clientY || (rect.top + rect.height / 2);
+                    evaluateAlignment(state.selectedAeonId, slot, x, y);
+                });
+
+                pathsBoardEl.appendChild(slot);
+            });
+        }
+
+        function selectAeonCard(aeonId) {
+            state.selectedAeonId = aeonId;
+            document.querySelectorAll('.aeon-card').forEach(c => {
+                c.classList.toggle('selected', c.dataset.aeonId === aeonId);
+            });
+        }
+
+        function clearSelection() {
+            state.selectedAeonId = null;
+            document.querySelectorAll('.aeon-card').forEach(c => c.classList.remove('selected'));
+        }
+
+        function evaluateAlignment(aeonId, slotEl, fxX, fxY) {
+            const targetAeonId = slotEl.dataset.targetAeonId;
+            const aeonObj = AEON_DATA.find(a => a.id === aeonId);
+            if (!aeonObj) return;
+
+            state.totalAttempts++;
+
+            if (aeonId === targetAeonId) {
+                state.correctAttempts++;
+                state.matchedCount++;
+                
+                const multiplier = 1 + state.streak * 0.25;
+                const basePoints = state.hardcoreMode ? 150 : 100;
+                const earnedPoints = Math.round(basePoints * multiplier);
+                
+                state.score += earnedPoints;
+                state.streak++;
+                if (state.streak > state.maxStreak) state.maxStreak = state.streak;
+
+                slotEl.classList.add('matched');
+                const badge = slotEl.querySelector('.path-status-badge');
+                if (badge) badge.textContent = 'Aligned';
+
+                const placeholder = slotEl.querySelector('.drop-placeholder');
+                if (placeholder) placeholder.remove();
+
+                const alignedBanner = document.createElement('div');
+                alignedBanner.className = 'aligned-aeon-banner';
+                alignedBanner.innerHTML = `
+                    ${aeonObj.svg}
+                    <div class="aligned-aeon-info">
+                        <span class="aligned-aeon-name">${aeonObj.name}</span>
+                        <span class="aligned-aeon-sub">${aeonObj.epithet}</span>
+                    </div>
+                `;
+                slotEl.appendChild(alignedBanner);
+
+                const cardEl = rosterEl.querySelector(`.aeon-card[data-aeon-id="${aeonId}"]`);
+                if (cardEl) cardEl.remove();
+
+                clearSelection();
+                updateHUD();
+                spawnScoreFloater(fxX, fxY, `+${earnedPoints}`, '#e6c37a');
+                setStatusMessage(`Resonance Confirmed! <strong>${aeonObj.name}</strong> presides over the Path of <strong>${aeonObj.path}</strong>.`, 'gold');
+
+                if (state.matchedCount === AEON_DATA.length) {
+                    handleVictory();
+                } else if (rosterEl.children.length === 0) {
+                    rosterEl.innerHTML = `<div class="roster-complete">All Entities Aligned</div>`;
+                }
+
+            } else {
+
+                state.streak = 0;
+                const penalty = 30;
+                state.score = Math.max(0, state.score - penalty);
+                updateHUD();
+
+                slotEl.classList.remove('error-shake');
+                void slotEl.offsetWidth;
+                slotEl.classList.add('error-shake');
+                setTimeout(() => slotEl.classList.remove('error-shake'), 500);
+
+                spawnScoreFloater(fxX, fxY, `-${penalty} MISMATCH`, '#ff4d6d');
+                setStatusMessage(`Resonance Rejected! <strong>${aeonObj.name}</strong> does not walk the Path of <strong>${slotEl.dataset.pathName}</strong>.`, 'error');
+            }
+        }
+
+        function handleVictory() {
+            state.isGameOver = true;
+            stopTimer();
+
+            const speedBonus = Math.max(0, (120 - state.timerSeconds) * 5);
+            state.score += speedBonus;
+            updateHUD();
+
+            const accuracy = state.totalAttempts > 0 
+                ? Math.round((state.correctAttempts / state.totalAttempts) * 100) 
+                : 100;
+
+            let rank = 'Nameless Trailblazer';
+            if (accuracy === 100 && state.hardcoreMode) {
+                rank = 'Genius Society #85 // Nous’ Chosen';
+            } else if (accuracy === 100) {
+                rank = 'Emanator of Erudition';
+            } else if (accuracy >= 80) {
+                rank = 'Astral Express Navigator';
+            } else if (accuracy >= 60) {
+                rank = 'Simulated Universe Tester';
+            }
+
+            document.getElementById('final-rank').textContent = `Rank: ${rank}`;
+            document.getElementById('final-score').textContent = state.score.toLocaleString();
+            document.getElementById('final-accuracy').textContent = `${accuracy}%`;
+            document.getElementById('final-time').textContent = formatTime(state.timerSeconds);
+            document.getElementById('final-max-streak').textContent = state.maxStreak;
+
+            setTimeout(() => {
+                victoryModalEl.classList.add('active');
+            }, 450);
+        }
+
+        modeToggleBtn.addEventListener('click', () => {
+            state.hardcoreMode = !state.hardcoreMode;
+            document.body.classList.toggle('hardcore-mode', state.hardcoreMode);
+            
+            if (state.hardcoreMode) {
+                modeToggleBtn.classList.add('hardcore-active');
+                modeToggleBtn.innerHTML = '<span>Mode: Hardcore (No Hints)</span>';
+                setStatusMessage('Simulated Universe Hardcore Activated: Path lore hints concealed (+50% base score).', 'error');
+            } else {
+                modeToggleBtn.classList.remove('hardcore-active');
+                modeToggleBtn.innerHTML = '<span>Mode: Normal</span>';
+                setStatusMessage('Normal Mode Activated: Data Bank lore hints visible.', 'cyan');
+            }
+        });
+
+        resetBtn.addEventListener('click', initGame);
+        playAgainBtn.addEventListener('click', initGame);
+
+        function initStarfield() {
+            const canvas = document.getElementById('starfield-canvas');
+            const ctx = canvas.getContext('2d');
+            let stars = [];
+
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                createStars();
+            }
+
+            function createStars() {
+                const count = Math.floor((canvas.width * canvas.height) / 9000);
+                stars = [];
+                for (let i = 0; i < count; i++) {
+                    stars.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        radius: Math.random() * 1.6 + 0.3,
+                        alpha: Math.random() * 0.8 + 0.2,
+                        delta: (Math.random() * 0.015 + 0.004) * (Math.random() < 0.5 ? 1 : -1),
+                        isGold: Math.random() < 0.22
+                    });
+                }
+            }
+
+            function animateStars() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                stars.forEach(star => {
+                    star.alpha += star.delta;
+                    if (star.alpha <= 0.15 || star.alpha >= 0.95) {
+                        star.delta *= -1;
+                    }
+                    ctx.beginPath();
+                    ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = star.isGold 
+                        ? `rgba(230, 195, 122, ${star.alpha})` 
+                        : `rgba(190, 225, 255, ${star.alpha})`;
+                    ctx.fill();
+                });
+                requestAnimationFrame(animateStars);
+            }
+
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+            animateStars();
+        }
+
+        window.onload = () => {
+            initStarfield();
+            initGame();
+        };
+    </script>
+</body>
+</html>
