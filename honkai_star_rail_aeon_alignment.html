@@ -1,0 +1,1494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulated Universe: Aeon Alignment</title>
+    <!-- Google Fonts: Cinzel for cosmic/mythic headers, Rajdhani for crisp sci-fi HUD UI -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ==========================================================================
+           HONKAI: STAR RAIL (SIMULATED UNIVERSE / DATA BANK) THEME VARIABLES
+           Customize these CSS variables to tweak the cosmic aesthetic!
+           ========================================================================== */
+        :root {
+            /* Deep Space Backgrounds */
+            --bg-void: #07090f;
+            --bg-nebula-dark: #0d121f;
+            --bg-nebula-accent: #182036;
+            
+            /* Frosted Glass Panels */
+            --glass-bg: rgba(16, 22, 38, 0.72);
+            --glass-bg-hover: rgba(24, 34, 58, 0.88);
+            --glass-border: rgba(230, 195, 122, 0.28);
+            --glass-border-bright: rgba(230, 195, 122, 0.75);
+
+            /* Signature HSR Accents */
+            --astral-gold: #e6c37a;
+            --astral-gold-dim: #9e8249;
+            --astral-gold-glow: rgba(230, 195, 122, 0.45);
+            
+            --celestial-cyan: #4cc9f0;
+            --celestial-cyan-glow: rgba(76, 201, 240, 0.45);
+            
+            --crimson-error: #ff4d6d;
+            --crimson-glow: rgba(255, 77, 109, 0.5);
+            
+            --emerald-success: #38b000;
+
+            /* Typography */
+            --font-display: 'Cinzel', serif;
+            --font-hud: 'Rajdhani', sans-serif;
+            --text-primary: #f0f4f8;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+
+            /* Geometry / Chamfered Corners */
+            --chamfer-sm: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+            --chamfer-md: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px);
+            --chamfer-lg: polygon(22px 0, 100% 0, 100% calc(100% - 22px), calc(100% - 22px) 100%, 0 100%, 0 22px);
+        }
+
+        /* ==========================================================================
+           GLOBAL RESET & COSMIC BACKGROUND
+           ========================================================================== */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body {
+            font-family: var(--font-hud);
+            background-color: var(--bg-void);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            line-height: 1.4;
+        }
+
+        /* Starfield Canvas Layer */
+        #starfield-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            background: radial-gradient(circle at 20% 25%, #161e35 0%, #0b0e17 55%, #06080d 100%);
+        }
+
+        /* Ambient Nebula Glow Overlay */
+        .nebula-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background: 
+                radial-gradient(ellipse at 80% 15%, rgba(76, 201, 240, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 15% 85%, rgba(230, 195, 122, 0.07) 0%, transparent 50%);
+        }
+
+        /* Main Application Wrapper */
+        .app-container {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        /* ==========================================================================
+           TOP HUD HEADER (SIMULATED UNIVERSE TERMINAL)
+           ========================================================================== */
+        .hud-header {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            clip-path: var(--chamfer-md);
+            padding: 1rem 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+
+        /* Decorative Gold Top Accent Line */
+        .hud-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 14px;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--astral-gold), var(--celestial-cyan), transparent);
+        }
+
+        .title-block {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+        }
+
+        .astral-emblem {
+            width: 42px;
+            height: 42px;
+            color: var(--astral-gold);
+            filter: drop-shadow(0 0 8px var(--astral-gold-glow));
+            flex-shrink: 0;
+            animation: slowSpin 30s linear infinite;
+        }
+
+        @keyframes slowSpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .title-text h1 {
+            font-family: var(--font-display);
+            font-size: clamp(1.15rem, 2.5vw, 1.65rem);
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            color: var(--astral-gold);
+            text-shadow: 0 0 12px var(--astral-gold-glow);
+            text-transform: uppercase;
+        }
+
+        .title-text .subtitle {
+            font-size: 0.85rem;
+            color: var(--celestial-cyan);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        /* HUD Telemetry Stats */
+        .hud-stats {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .stat-box {
+            background: rgba(10, 14, 24, 0.75);
+            border: 1px solid rgba(76, 201, 240, 0.25);
+            clip-path: var(--chamfer-sm);
+            padding: 0.4rem 0.9rem;
+            min-width: 95px;
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--text-secondary);
+            display: block;
+        }
+
+        .stat-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .stat-value.gold { color: var(--astral-gold); }
+        .stat-value.cyan { color: var(--celestial-cyan); }
+
+        /* Controls & Mode Toggle */
+        .hud-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+        }
+
+        .hsr-btn {
+            background: linear-gradient(135deg, rgba(230, 195, 122, 0.15), rgba(230, 195, 122, 0.05));
+            border: 1px solid var(--astral-gold);
+            color: var(--astral-gold);
+            font-family: var(--font-hud);
+            font-weight: 700;
+            font-size: 0.85rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 0.55rem 1rem;
+            clip-path: var(--chamfer-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .hsr-btn:hover {
+            background: var(--astral-gold);
+            color: var(--bg-void);
+            box-shadow: 0 0 15px var(--astral-gold-glow);
+        }
+
+        .hsr-btn.hardcore-active {
+            background: linear-gradient(135deg, rgba(255, 77, 109, 0.25), rgba(255, 77, 109, 0.1));
+            border-color: var(--crimson-error);
+            color: #ff8fa3;
+            box-shadow: 0 0 12px var(--crimson-glow);
+        }
+
+        .hsr-btn.hardcore-active:hover {
+            background: var(--crimson-error);
+            color: #fff;
+        }
+
+        /* ==========================================================================
+           INSTRUCTION BANNER / STATUS FEEDBACK BAR
+           ========================================================================== */
+        .status-banner {
+            background: rgba(13, 18, 31, 0.8);
+            border-left: 3px solid var(--celestial-cyan);
+            border-right: 3px solid var(--celestial-cyan);
+            padding: 0.55rem 1rem;
+            text-align: center;
+            font-size: 0.95rem;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .status-banner.highlight-cyan {
+            color: var(--celestial-cyan);
+            background: rgba(76, 201, 240, 0.12);
+        }
+
+        .status-banner.highlight-gold {
+            color: var(--astral-gold);
+            border-color: var(--astral-gold);
+            background: rgba(230, 195, 122, 0.12);
+        }
+
+        .status-banner.highlight-error {
+            color: var(--crimson-error);
+            border-color: var(--crimson-error);
+            background: rgba(255, 77, 109, 0.12);
+        }
+
+        /* ==========================================================================
+           MAIN GAME BOARD LAYOUT
+           ========================================================================== */
+        .game-workspace {
+            display: grid;
+            grid-template-columns: 340px 1fr;
+            gap: 1.25rem;
+            align-items: start;
+        }
+
+        @media (max-width: 960px) {
+            .game-workspace {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Section Panels */
+        .panel-section {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            clip-path: var(--chamfer-md);
+            padding: 1.15rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(230, 195, 122, 0.2);
+            padding-bottom: 0.65rem;
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            color: var(--astral-gold);
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-tag {
+            font-size: 0.72rem;
+            color: var(--celestial-cyan);
+            background: rgba(76, 201, 240, 0.12);
+            padding: 0.15rem 0.5rem;
+            border: 1px solid rgba(76, 201, 240, 0.3);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        /* ==========================================================================
+           AEON ROSTER (DRAGGABLE CARDS)
+           ========================================================================== */
+        .aeon-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+        }
+
+        @media (max-width: 960px) {
+            .aeon-grid {
+                grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
+            }
+        }
+
+        .aeon-card {
+            background: linear-gradient(145deg, rgba(24, 32, 54, 0.9), rgba(12, 16, 28, 0.95));
+            border: 1px solid rgba(230, 195, 122, 0.35);
+            clip-path: var(--chamfer-sm);
+            padding: 0.75rem 0.6rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.45rem;
+            cursor: grab;
+            transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), 
+                        border-color 0.2s ease, 
+                        box-shadow 0.2s ease,
+                        background 0.2s ease;
+            position: relative;
+            touch-action: manipulation;
+        }
+
+        .aeon-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--astral-gold);
+            box-shadow: 0 6px 20px rgba(230, 195, 122, 0.25);
+            background: linear-gradient(145deg, rgba(34, 46, 76, 0.95), rgba(16, 22, 38, 0.98));
+        }
+
+        .aeon-card:active {
+            cursor: grabbing;
+        }
+
+        /* Dragging & Tap-Selected States */
+        .aeon-card.dragging {
+            opacity: 0.45;
+            transform: scale(0.96);
+        }
+
+        .aeon-card.selected {
+            border-color: var(--celestial-cyan);
+            background: linear-gradient(145deg, rgba(20, 52, 74, 0.95), rgba(12, 24, 38, 0.98));
+            box-shadow: 0 0 18px var(--celestial-cyan-glow);
+            transform: translateY(-3px) scale(1.03);
+        }
+
+        .aeon-card.selected::after {
+            content: 'SELECTED';
+            position: absolute;
+            top: 3px;
+            right: 6px;
+            font-size: 0.58rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            color: var(--celestial-cyan);
+        }
+
+        .aeon-sigil {
+            width: 38px;
+            height: 38px;
+            color: var(--astral-gold);
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+
+        .aeon-card:hover .aeon-sigil {
+            transform: scale(1.1);
+            filter: drop-shadow(0 0 6px var(--astral-gold-glow));
+        }
+
+        .aeon-card.selected .aeon-sigil {
+            color: var(--celestial-cyan);
+            filter: drop-shadow(0 0 8px var(--celestial-cyan-glow));
+        }
+
+        .aeon-name {
+            font-family: var(--font-display);
+            font-size: 0.92rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            color: var(--text-primary);
+            text-align: center;
+        }
+
+        .aeon-epithet {
+            font-size: 0.68rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            text-align: center;
+        }
+
+        /* Empty Roster State */
+        .roster-complete {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 2rem 1rem;
+            color: var(--astral-gold);
+            font-family: var(--font-display);
+            font-size: 1.05rem;
+            letter-spacing: 0.08em;
+        }
+
+        /* ==========================================================================
+           PATHS MATRIX (DROP ZONES)
+           ========================================================================== */
+        .paths-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+            gap: 0.9rem;
+        }
+
+        .path-slot {
+            background: rgba(11, 15, 26, 0.78);
+            border: 1px dashed rgba(76, 201, 240, 0.35);
+            clip-path: var(--chamfer-md);
+            padding: 0.95rem;
+            min-height: 128px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.25s ease;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .path-slot:hover:not(.matched) {
+            border-color: var(--celestial-cyan);
+            background: rgba(18, 28, 48, 0.85);
+        }
+
+        /* Drag Hover State */
+        .path-slot.drag-over:not(.matched) {
+            border-style: solid;
+            border-color: var(--celestial-cyan);
+            background: rgba(76, 201, 240, 0.14);
+            box-shadow: inset 0 0 20px rgba(76, 201, 240, 0.2), 0 0 15px var(--celestial-cyan-glow);
+            transform: scale(1.02);
+        }
+
+        /* Matched / Aligned State */
+        .path-slot.matched {
+            border-style: solid;
+            border-color: var(--astral-gold);
+            background: linear-gradient(145deg, rgba(230, 195, 122, 0.16), rgba(16, 22, 38, 0.92));
+            box-shadow: 0 0 20px rgba(230, 195, 122, 0.22);
+            cursor: default;
+            animation: alignPulse 0.6s ease-out;
+        }
+
+        @keyframes alignPulse {
+            0% { box-shadow: 0 0 0 0 rgba(230, 195, 122, 0.8); transform: scale(1.04); }
+            100% { box-shadow: 0 0 20px rgba(230, 195, 122, 0.22); transform: scale(1); }
+        }
+
+        /* Mismatch / Error Shake Animation */
+        .path-slot.error-shake {
+            border-style: solid;
+            border-color: var(--crimson-error);
+            background: rgba(255, 77, 109, 0.18);
+            box-shadow: 0 0 20px var(--crimson-glow);
+            animation: hsrShake 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+        }
+
+        @keyframes hsrShake {
+            10%, 90% { transform: translate3d(-2px, 0, 0); }
+            20%, 80% { transform: translate3d(4px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-6px, 0, 0); }
+            40%, 60% { transform: translate3d(6px, 0, 0); }
+        }
+
+        .path-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+        }
+
+        .path-title {
+            font-family: var(--font-display);
+            font-size: 1.05rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            color: var(--celestial-cyan);
+            text-transform: uppercase;
+        }
+
+        .path-slot.matched .path-title {
+            color: var(--astral-gold);
+        }
+
+        .path-status-badge {
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 0.15rem 0.45rem;
+            border-radius: 2px;
+            background: rgba(76, 201, 240, 0.12);
+            color: var(--celestial-cyan);
+        }
+
+        .path-slot.matched .path-status-badge {
+            background: rgba(230, 195, 122, 0.22);
+            color: var(--astral-gold);
+        }
+
+        .path-hint {
+            font-size: 0.84rem;
+            color: var(--text-secondary);
+            margin-top: 0.45rem;
+            line-height: 1.35;
+            transition: opacity 0.25s ease;
+        }
+
+        /* Hardcore Mode hides lore hints */
+        body.hardcore-mode .path-hint {
+            display: none;
+        }
+
+        .drop-placeholder {
+            margin-top: 0.65rem;
+            padding: 0.4rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        /* Matched Aeon Display inside Path Slot */
+        .aligned-aeon-banner {
+            margin-top: 0.65rem;
+            padding: 0.45rem 0.65rem;
+            background: rgba(10, 14, 24, 0.85);
+            border: 1px solid var(--astral-gold);
+            clip-path: var(--chamfer-sm);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .aligned-aeon-banner svg {
+            width: 26px;
+            height: 26px;
+            color: var(--astral-gold);
+            flex-shrink: 0;
+        }
+
+        .aligned-aeon-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .aligned-aeon-name {
+            font-family: var(--font-display);
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--astral-gold);
+        }
+
+        .aligned-aeon-sub {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+        }
+
+        /* ==========================================================================
+           FLOATING SCORE POPUP FEEDBACK
+           ========================================================================== */
+        .score-floater {
+            position: fixed;
+            pointer-events: none;
+            font-family: var(--font-hud);
+            font-weight: 800;
+            font-size: 1.25rem;
+            z-index: 100;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+            animation: floatUpFade 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        @keyframes floatUpFade {
+            0% { opacity: 1; transform: translate(-50%, 0) scale(0.9); }
+            50% { opacity: 1; transform: translate(-50%, -28px) scale(1.1); }
+            100% { opacity: 0; transform: translate(-50%, -52px) scale(1); }
+        }
+
+        /* ==========================================================================
+           VICTORY / SIMULATED UNIVERSE COMPLETION MODAL
+           ========================================================================== */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(5, 7, 13, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.25rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.35s ease;
+        }
+
+        .modal-backdrop.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .victory-modal {
+            background: linear-gradient(160deg, rgba(22, 30, 52, 0.96), rgba(10, 14, 24, 0.98));
+            border: 1px solid var(--astral-gold);
+            clip-path: var(--chamfer-lg);
+            max-width: 480px;
+            width: 100%;
+            padding: 2rem 1.75rem;
+            text-align: center;
+            box-shadow: 0 0 50px rgba(230, 195, 122, 0.3);
+            transform: scale(0.92);
+            transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+            position: relative;
+        }
+
+        .modal-backdrop.active .victory-modal {
+            transform: scale(1);
+        }
+
+        .modal-subtitle {
+            font-size: 0.8rem;
+            letter-spacing: 0.2em;
+            color: var(--celestial-cyan);
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 0.35rem;
+        }
+
+        .modal-title {
+            font-family: var(--font-display);
+            font-size: 1.85rem;
+            font-weight: 800;
+            color: var(--astral-gold);
+            text-shadow: 0 0 15px var(--astral-gold-glow);
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-rank-badge {
+            display: inline-block;
+            margin: 0.5rem 0 1.25rem;
+            padding: 0.35rem 1.1rem;
+            background: rgba(230, 195, 122, 0.15);
+            border: 1px solid var(--astral-gold);
+            clip-path: var(--chamfer-sm);
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            color: var(--astral-gold);
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .result-item {
+            background: rgba(8, 11, 20, 0.75);
+            border: 1px solid rgba(76, 201, 240, 0.25);
+            clip-path: var(--chamfer-sm);
+            padding: 0.75rem;
+        }
+
+        .result-item .label {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            display: block;
+        }
+
+        .result-item .val {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .result-item .val.gold { color: var(--astral-gold); }
+        .result-item .val.cyan { color: var(--celestial-cyan); }
+
+        .modal-actions {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+        .hsr-btn-primary {
+            background: linear-gradient(135deg, var(--astral-gold), #c89d4c);
+            border: none;
+            color: #07090f;
+            font-family: var(--font-hud);
+            font-weight: 800;
+            font-size: 1rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 0.75rem 1.75rem;
+            clip-path: var(--chamfer-sm);
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .hsr-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 22px var(--astral-gold-glow);
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Starfield Background -->
+    <canvas id="starfield-canvas"></canvas>
+    <div class="nebula-overlay"></div>
+
+    <div class="app-container">
+        <!-- Top Simulated Universe HUD Header -->
+        <header class="hud-header">
+            <div class="title-block">
+                <!-- Astral Express / Simulated Universe Compass SVG -->
+                <svg class="astral-emblem" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="32" cy="32" r="28" stroke-dasharray="4 4" opacity="0.6"/>
+                    <circle cx="32" cy="32" r="20"/>
+                    <polygon points="32,4 37,27 60,32 37,37 32,60 27,37 4,32 27,27" fill="currentColor" fill-opacity="0.2"/>
+                    <circle cx="32" cy="32" r="4" fill="currentColor"/>
+                </svg>
+                <div class="title-text">
+                    <div class="subtitle">Simulated Universe // Data Bank</div>
+                    <h1>Aeon &amp; Path Resonance</h1>
+                </div>
+            </div>
+
+            <!-- Live Telemetry Stats -->
+            <div class="hud-stats">
+                <div class="stat-box">
+                    <span class="stat-label">Resonance Score</span>
+                    <span class="stat-value gold" id="score-display">0</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">Streak</span>
+                    <span class="stat-value cyan" id="streak-display">x1.0</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">Aligned</span>
+                    <span class="stat-value" id="progress-display">0 / 12</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">Elapsed</span>
+                    <span class="stat-value" id="timer-display">00:00</span>
+                </div>
+            </div>
+
+            <!-- Action Controls -->
+            <div class="hud-controls">
+                <button id="mode-toggle-btn" class="hsr-btn" title="Toggle Lore Hints">
+                    <span>Mode: Normal</span>
+                </button>
+                <button id="reset-btn" class="hsr-btn" title="Reset Simulation">
+                    <span>↻ Reset</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Dynamic Status / Instruction Bar -->
+        <div id="status-banner" class="status-banner">
+            <span>Drag an Aeon from the Cosmic Roster onto its corresponding Path—or tap an Aeon then tap a Path.</span>
+        </div>
+
+        <!-- Main Workspace: Aeon Roster (Left) + Path Slots (Right) -->
+        <main class="game-workspace">
+            <!-- Left Panel: Draggable Aeons -->
+            <section class="panel-section">
+                <div class="section-header">
+                    <h2 class="section-title">Aeon Entities</h2>
+                    <span class="section-tag" id="remaining-tag">12 Unaligned</span>
+                </div>
+                <div class="aeon-grid" id="aeon-roster">
+                    <!-- Aeon Cards injected via JS -->
+                </div>
+            </section>
+
+            <!-- Right Panel: Path Drop Zones -->
+            <section class="panel-section">
+                <div class="section-header">
+                    <h2 class="section-title">Primum Mobile // Paths</h2>
+                    <span class="section-tag">Drop Targets</span>
+                </div>
+                <div class="paths-grid" id="paths-board">
+                    <!-- Path Drop Slots injected via JS -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Victory / End-Game Modal -->
+    <div class="modal-backdrop" id="victory-modal">
+        <div class="victory-modal">
+            <div class="modal-subtitle">Simulated Universe Synchronization Complete</div>
+            <h2 class="modal-title">All Aeons Aligned</h2>
+            <div class="modal-rank-badge" id="final-rank">Rank: Pathstrider</div>
+
+            <div class="results-grid">
+                <div class="result-item">
+                    <span class="label">Final Score</span>
+                    <span class="val gold" id="final-score">0</span>
+                </div>
+                <div class="result-item">
+                    <span class="label">Accuracy</span>
+                    <span class="val cyan" id="final-accuracy">100%</span>
+                </div>
+                <div class="result-item">
+                    <span class="label">Time Elapsed</span>
+                    <span class="val" id="final-time">00:00</span>
+                </div>
+                <div class="result-item">
+                    <span class="label">Max Streak</span>
+                    <span class="val gold" id="final-max-streak">0</span>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button class="hsr-btn-primary" id="play-again-btn">Initialize New Run</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* ==========================================================================
+           HONKAI: STAR RAIL AEON & PATH DATASET
+           Contains all 12 Aeons, their Paths, lore hints, and custom cosmic SVG sigils.
+           ========================================================================== */
+        const AEON_DATA = [
+            {
+                id: 'nanook',
+                name: 'Nanook',
+                epithet: 'The Ruin Author',
+                path: 'Destruction',
+                hint: 'Born from the ashes of Adlivun; seeks the entropy and annihilation of the universe.',
+                svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2">
+                        <polygon points="24,4 42,38 6,38"/>
+                        <line x1="24" y1="14" x2="24" y2="44"/>
+                        <circle cx="24" cy="28" r="5" fill="currentColor"/>
+                      </svg>`
+            },
+            {
+                id: 'lan',
+                name: 'Lan',
+                epithet: 'The Reignbow Arbiter',
+                path: 'The Hunt',
+                hint: 'Wields the Lux Arrow across the cosmos in endless, decisive vengeance against abominations.',
+                svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2">
+                        <path d="M10 36 C10 16, 38 16, 38 36"/>
+                        <line x1="24" y1="6" x2="24" y2="42"/>
+                        <polyline points="17,13 24,6 31,13"/>
+                      </svg>`
+            },
+            {
+                id: 'nous',
+                name: 'Nous',
+                epithet: 'The Erudition',
+                path: 'Erudition',
+                hint: 'An astral computer ascended to godhood, calculating the ultimate answers to all cosmic enigmas.',
+                svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2">
+                        <circle cx="24" cy="24" r="14"/>
+                        <circle cx="24" cy="24" r="5" fill="currentColor"/>
+                        <line x1="24" y1="4" x2="24" y2="10"/>
+                        <line x1="24" y1="38" x2="24" y2="44"/>
+                        <line x1="4" y1="24" x2="10" y2="24"/>
+                        <line x1="38" y1="24" x2="44" y2="24"/>
+                      </svg>`
+            },
+            {
+                id: 'xipe',
+                name: 'Xipe',
+                epithet: 'The Triple-Faced Soul',
+                path: 'Harmony',
+                hint: 'A celestial chorus of thousand-faced unity, advocating joy, peace, and collective resonance.',
+                svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2">
+                        <polygon points="24,6 39,15 39,33 24,42 9,33 9,15"/>
+                        <circle cx="24" cy="24" r="7"/>
+                        <line x1="24" y1="6" x2="24" y2="17"/>
+                        <line x1="39" y1="33" x2="30" y2="28"/>
+                        <line x1="9" y1="33" x2="18" y2="28"/>
+                      </svg>`
+            },
+            {
+                id: 'ix',
+                name: 'IX',
+                epithet: 'Sleeping & Shapeless',
+                path: 'Nihility',
+                hint: 'A silent, languid shadow-blob who believes the multiverse holds zero ultimate meaning.',
+                svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2">
+                        <circle cx="24" cy="24" r="13" fill="currentColor" fill-opacity="0.25"/>
+                        <ellipse cx="24" cy="24" rx="20" ry="6" transform="rotate(-20 24 24)"/>
+                        <circle cx="20" cy="22" r="1.5" fill="currentColor"/>
+                        <circle cx="28" cy="22" r="1.5" fill="currentColor"/>
+                      </svg>`
+            },
+            {
+                id: 'qlipoth',
+                name: 'Qlipoth',
+                epithet: 'The Amber Lord',
+                path: 'Preservation',
+                hint: 'Forges the Subspace Crystalline Barrier with a colossal hammer to shield worlds from calamity.',
+                svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2">
+                        <path d="M10 10 L38 10 L38 26 C38 36 24 42 24 42 C24 42 10 36 10 26 Z"/>
+                        <polygon points="24,16 31,24 24,32 17,24" fill="currentColor" fill-opacity="0.3"/>
+                      </svg>`
+            },
+            {
+                id: 'yaoshi',
+                name: 'Yaoshi',
+                epithet: 'The Plagues Author',
+                path: 'Abundance',
+                hint: 'Bestows endless vitality and immortality, refusing to let any living blossom wither.',
+                svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2">
+                        <path d="M24 42 L24 12"/>
+                        <path d="M24 30 C14 30 12 20 24 18"/>
+                        <path d="M24 26 C34 26 36 16 24 14"/>
+                        <circle cx="24" cy="9" r="3" fill="currentColor"/>
+                      </svg>`
+            },
+            {
+                id: 'aha',
+                name: 'Aha',
+                epithet: 'The Laughter',
+                path: 'Elation',
+                hint: 'Climbed the Imaginary Tree, laughed at the absurdity of existence, and seeks pure theatrical chaos.',
+                svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2">
+                        <circle cx="24" cy="24" r="16"/>
+                        <path d="M16 20 L19 17 L22 20"/>
+                        <path d="M26 20 L29 17 L32 20"/>
+                        <path d="M15 27 Q24 37 33 27 Z" fill="currentColor" fill-opacity="0.25"/>
+                      </svg>`
+            },
+            {
+                id: 'fuli',
+                name: 'Fuli',
+                epithet: 'The Remembrance',
+                path: 'Remembrance',
+                hint: 'Records every fleeting thought and crystalized memory so the universe may be reborn after ruin.',
+                svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2">
+                        <polygon points="24,4 38,24 24,44 10,24"/>
+                        <polygon points="24,12 32,24 24,36 16,24" fill="currentColor" fill-opacity="0.25"/>
+                        <circle cx="24" cy="24" r="2.5" fill="currentColor"/>
+                      </svg>`
+            },
+            {
+                id: 'akivili',
+                name: 'Akivili',
+                epithet: 'The Trailblaze',
+                path: 'Trailblaze',
+                hint: 'Left the isolated world of Pegana to chart the Star Rail and connect unknown civilizations.',
+                svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2">
+                        <polygon points="24,4 29,19 44,24 29,29 24,44 19,29 4,24 19,19"/>
+                        <circle cx="24" cy="24" r="4" fill="currentColor"/>
+                      </svg>`
+            },
+            {
+                id: 'terminus',
+                name: 'Terminus',
+                epithet: 'The Finality',
+                path: 'Finality',
+                hint: 'An apparition moving backward through time, murmuring prophecies of the cosmos’ inevitable end.',
+                svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2">
+                        <polygon points="12,8 36,8 24,24"/>
+                        <polygon points="12,40 36,40 24,24" fill="currentColor" fill-opacity="0.25"/>
+                        <line x1="10" y1="8" x2="38" y2="8"/>
+                        <line x1="10" y1="40" x2="38" y2="40"/>
+                      </svg>`
+            },
+            {
+                id: 'ouroboros',
+                name: 'Ouroboros',
+                epithet: 'The Voracity',
+                path: 'Voracity',
+                hint: 'An ancient Leviathan-Aeon with an insatiable void-maw that devours stars and worlds alike.',
+                svg: `<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.2">
+                        <path d="M24 8 A16 16 0 1 1 10 32"/>
+                        <polygon points="10,32 6,24 16,26" fill="currentColor"/>
+                        <circle cx="24" cy="24" r="7" stroke-dasharray="3 3"/>
+                      </svg>`
+            }
+        ];
+
+        /* ==========================================================================
+           GAME STATE MANAGEMENT
+           ========================================================================== */
+        const state = {
+            score: 0,
+            streak: 0,
+            maxStreak: 0,
+            matchedCount: 0,
+            totalAttempts: 0,
+            correctAttempts: 0,
+            selectedAeonId: null,     // Used for tap/click fallback & keyboard accessibility
+            draggedAeonId: null,      // Used for HTML5 drag-and-drop
+            hardcoreMode: false,      // Toggles lore hints off for higher challenge
+            timerSeconds: 0,
+            timerInterval: null,
+            isGameOver: false
+        };
+
+        /* ==========================================================================
+           DOM ELEMENT REFERENCES
+           ========================================================================== */
+        const rosterEl = document.getElementById('aeon-roster');
+        const pathsBoardEl = document.getElementById('paths-board');
+        const scoreDisplayEl = document.getElementById('score-display');
+        const streakDisplayEl = document.getElementById('streak-display');
+        const progressDisplayEl = document.getElementById('progress-display');
+        const timerDisplayEl = document.getElementById('timer-display');
+        const remainingTagEl = document.getElementById('remaining-tag');
+        const statusBannerEl = document.getElementById('status-banner');
+        const modeToggleBtn = document.getElementById('mode-toggle-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const victoryModalEl = document.getElementById('victory-modal');
+        const playAgainBtn = document.getElementById('play-again-btn');
+
+        /* ==========================================================================
+           UTILITY FUNCTIONS
+           ========================================================================== */
+        // Fisher-Yates Shuffle so Aeons and Paths randomize each run
+        function shuffleArray(array) {
+            const arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        // Format seconds as MM:SS
+        function formatTime(secs) {
+            const mins = Math.floor(secs / 60).toString().padStart(2, '0');
+            const remSecs = (secs % 60).toString().padStart(2, '0');
+            return `${mins}:${remSecs}`;
+        }
+
+        // Update top instruction/feedback banner
+        function setStatusMessage(text, type = '') {
+            statusBannerEl.innerHTML = `<span>${text}</span>`;
+            statusBannerEl.className = 'status-banner';
+            if (type) statusBannerEl.classList.add(`highlight-${type}`);
+        }
+
+        // Spawn floating +points or -points indicator at cursor/element coordinates
+        function spawnScoreFloater(x, y, text, color) {
+            const floater = document.createElement('div');
+            floater.className = 'score-floater';
+            floater.textContent = text;
+            floater.style.left = `${x}px`;
+            floater.style.top = `${y}px`;
+            floater.style.color = color;
+            document.body.appendChild(floater);
+            setTimeout(() => floater.remove(), 1000);
+        }
+
+        // Update all HUD counters
+        function updateHUD() {
+            scoreDisplayEl.textContent = state.score.toLocaleString();
+            const multiplier = (1 + state.streak * 0.25).toFixed(2);
+            streakDisplayEl.textContent = `x${multiplier}`;
+            progressDisplayEl.textContent = `${state.matchedCount} / ${AEON_DATA.length}`;
+            const remaining = AEON_DATA.length - state.matchedCount;
+            remainingTagEl.textContent = `${remaining} Unaligned`;
+        }
+
+        /* ==========================================================================
+           TIMER LOGIC
+           ========================================================================== */
+        function startTimer() {
+            stopTimer();
+            state.timerSeconds = 0;
+            timerDisplayEl.textContent = '00:00';
+            state.timerInterval = setInterval(() => {
+                if (!state.isGameOver) {
+                    state.timerSeconds++;
+                    timerDisplayEl.textContent = formatTime(state.timerSeconds);
+                }
+            }, 1000);
+        }
+
+        function stopTimer() {
+            if (state.timerInterval) {
+                clearInterval(state.timerInterval);
+                state.timerInterval = null;
+            }
+        }
+
+        /* ==========================================================================
+           BOARD RENDERING & INTERACTION BINDING
+           ========================================================================== */
+        function initGame() {
+            // Reset state
+            state.score = 0;
+            state.streak = 0;
+            state.maxStreak = 0;
+            state.matchedCount = 0;
+            state.totalAttempts = 0;
+            state.correctAttempts = 0;
+            state.selectedAeonId = null;
+            state.draggedAeonId = null;
+            state.isGameOver = false;
+
+            victoryModalEl.classList.remove('active');
+            updateHUD();
+            setStatusMessage('Drag an Aeon from the Cosmic Roster onto its corresponding Path—or tap an Aeon then tap a Path.');
+            startTimer();
+
+            // Clear containers
+            rosterEl.innerHTML = '';
+            pathsBoardEl.innerHTML = '';
+
+            // Shuffle Aeons and Paths independently
+            const shuffledAeons = shuffleArray(AEON_DATA);
+            const shuffledPaths = shuffleArray(AEON_DATA);
+
+            // Render Aeon Cards
+            shuffledAeons.forEach(aeon => {
+                const card = document.createElement('div');
+                card.className = 'aeon-card';
+                card.draggable = true;
+                card.dataset.aeonId = aeon.id;
+                card.innerHTML = `
+                    <div class="aeon-sigil">${aeon.svg}</div>
+                    <div class="aeon-name">${aeon.name}</div>
+                    <div class="aeon-epithet">${aeon.epithet}</div>
+                `;
+
+                // HTML5 Drag Events
+                card.addEventListener('dragstart', (e) => {
+                    state.draggedAeonId = aeon.id;
+                    selectAeonCard(aeon.id);
+                    card.classList.add('dragging');
+                    e.dataTransfer.setData('text/plain', aeon.id);
+                    e.dataTransfer.effectAllowed = 'move';
+                });
+
+                card.addEventListener('dragend', () => {
+                    card.classList.remove('dragging');
+                    state.draggedAeonId = null;
+                });
+
+                // Touch / Click Selection Fallback
+                card.addEventListener('click', () => {
+                    if (state.selectedAeonId === aeon.id) {
+                        clearSelection();
+                    } else {
+                        selectAeonCard(aeon.id);
+                        setStatusMessage(`Selected <strong>${aeon.name}</strong> (${aeon.epithet}). Now select a Path drop zone to align.`, 'cyan');
+                    }
+                });
+
+                rosterEl.appendChild(card);
+            });
+
+            // Render Path Drop Slots
+            shuffledPaths.forEach(item => {
+                const slot = document.createElement('div');
+                slot.className = 'path-slot';
+                slot.dataset.targetAeonId = item.id;
+                slot.dataset.pathName = item.path;
+                slot.innerHTML = `
+                    <div>
+                        <div class="path-header">
+                            <span class="path-title">${item.path}</span>
+                            <span class="path-status-badge">Unbound</span>
+                        </div>
+                        <p class="path-hint">${item.hint}</p>
+                    </div>
+                    <div class="drop-placeholder">Drop or Tap to Align Aeon</div>
+                `;
+
+                // HTML5 Drag-Over & Drop Events
+                slot.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    if (!slot.classList.contains('matched')) {
+                        slot.classList.add('drag-over');
+                    }
+                });
+
+                slot.addEventListener('dragleave', () => {
+                    slot.classList.remove('drag-over');
+                });
+
+                slot.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    slot.classList.remove('drag-over');
+                    if (slot.classList.contains('matched')) return;
+
+                    const droppedId = e.dataTransfer.getData('text/plain') || state.draggedAeonId;
+                    if (droppedId) {
+                        const rect = slot.getBoundingClientRect();
+                        evaluateAlignment(droppedId, slot, rect.left + rect.width / 2, rect.top + rect.height / 2);
+                    }
+                });
+
+                // Touch / Click Fallback on Path Slot
+                slot.addEventListener('click', (e) => {
+                    if (slot.classList.contains('matched')) return;
+                    if (!state.selectedAeonId) {
+                        setStatusMessage(`Select an Aeon entity first before attempting to bind the Path of <strong>${item.path}</strong>.`, 'cyan');
+                        return;
+                    }
+                    const rect = slot.getBoundingClientRect();
+                    const x = e.clientX || (rect.left + rect.width / 2);
+                    const y = e.clientY || (rect.top + rect.height / 2);
+                    evaluateAlignment(state.selectedAeonId, slot, x, y);
+                });
+
+                pathsBoardEl.appendChild(slot);
+            });
+        }
+
+        // Highlight selected Aeon card for click/tap play
+        function selectAeonCard(aeonId) {
+            state.selectedAeonId = aeonId;
+            document.querySelectorAll('.aeon-card').forEach(c => {
+                c.classList.toggle('selected', c.dataset.aeonId === aeonId);
+            });
+        }
+
+        function clearSelection() {
+            state.selectedAeonId = null;
+            document.querySelectorAll('.aeon-card').forEach(c => c.classList.remove('selected'));
+        }
+
+        /* ==========================================================================
+           MATCHING & SCORING ENGINE
+           ========================================================================== */
+        function evaluateAlignment(aeonId, slotEl, fxX, fxY) {
+            const targetAeonId = slotEl.dataset.targetAeonId;
+            const aeonObj = AEON_DATA.find(a => a.id === aeonId);
+            if (!aeonObj) return;
+
+            state.totalAttempts++;
+
+            if (aeonId === targetAeonId) {
+                // CORRECT MATCH!
+                state.correctAttempts++;
+                state.matchedCount++;
+                
+                // Calculate score with streak multiplier & hardcore bonus
+                const multiplier = 1 + state.streak * 0.25;
+                const basePoints = state.hardcoreMode ? 150 : 100;
+                const earnedPoints = Math.round(basePoints * multiplier);
+                
+                state.score += earnedPoints;
+                state.streak++;
+                if (state.streak > state.maxStreak) state.maxStreak = state.streak;
+
+                // Update Slot UI to Aligned state
+                slotEl.classList.add('matched');
+                const badge = slotEl.querySelector('.path-status-badge');
+                if (badge) badge.textContent = 'Aligned';
+
+                const placeholder = slotEl.querySelector('.drop-placeholder');
+                if (placeholder) placeholder.remove();
+
+                const alignedBanner = document.createElement('div');
+                alignedBanner.className = 'aligned-aeon-banner';
+                alignedBanner.innerHTML = `
+                    ${aeonObj.svg}
+                    <div class="aligned-aeon-info">
+                        <span class="aligned-aeon-name">${aeonObj.name}</span>
+                        <span class="aligned-aeon-sub">${aeonObj.epithet}</span>
+                    </div>
+                `;
+                slotEl.appendChild(alignedBanner);
+
+                // Remove Aeon Card from Roster
+                const cardEl = rosterEl.querySelector(`.aeon-card[data-aeon-id="${aeonId}"]`);
+                if (cardEl) cardEl.remove();
+
+                clearSelection();
+                updateHUD();
+                spawnScoreFloater(fxX, fxY, `+${earnedPoints}`, '#e6c37a');
+                setStatusMessage(`Resonance Confirmed! <strong>${aeonObj.name}</strong> presides over the Path of <strong>${aeonObj.path}</strong>.`, 'gold');
+
+                // Check if all Aeons are aligned
+                if (state.matchedCount === AEON_DATA.length) {
+                    handleVictory();
+                } else if (rosterEl.children.length === 0) {
+                    rosterEl.innerHTML = `<div class="roster-complete">All Entities Aligned</div>`;
+                }
+
+            } else {
+                // MISMATCH!
+                state.streak = 0;
+                const penalty = 30;
+                state.score = Math.max(0, state.score - penalty);
+                updateHUD();
+
+                // Trigger Crimson Shake animation
+                slotEl.classList.remove('error-shake');
+                void slotEl.offsetWidth; // Trigger reflow to restart CSS animation
+                slotEl.classList.add('error-shake');
+                setTimeout(() => slotEl.classList.remove('error-shake'), 500);
+
+                spawnScoreFloater(fxX, fxY, `-${penalty} MISMATCH`, '#ff4d6d');
+                setStatusMessage(`Resonance Rejected! <strong>${aeonObj.name}</strong> does not walk the Path of <strong>${slotEl.dataset.pathName}</strong>.`, 'error');
+            }
+        }
+
+        /* ==========================================================================
+           VICTORY / END-GAME MODAL HANDLER
+           ========================================================================== */
+        function handleVictory() {
+            state.isGameOver = true;
+            stopTimer();
+
+            // Speed Bonus Calculation
+            const speedBonus = Math.max(0, (120 - state.timerSeconds) * 5);
+            state.score += speedBonus;
+            updateHUD();
+
+            const accuracy = state.totalAttempts > 0 
+                ? Math.round((state.correctAttempts / state.totalAttempts) * 100) 
+                : 100;
+
+            // Determine HSR-themed Rank
+            let rank = 'Nameless Trailblazer';
+            if (accuracy === 100 && state.hardcoreMode) {
+                rank = 'Genius Society #85 // Nous’ Chosen';
+            } else if (accuracy === 100) {
+                rank = 'Emanator of Erudition';
+            } else if (accuracy >= 80) {
+                rank = 'Astral Express Navigator';
+            } else if (accuracy >= 60) {
+                rank = 'Simulated Universe Tester';
+            }
+
+            document.getElementById('final-rank').textContent = `Rank: ${rank}`;
+            document.getElementById('final-score').textContent = state.score.toLocaleString();
+            document.getElementById('final-accuracy').textContent = `${accuracy}%`;
+            document.getElementById('final-time').textContent = formatTime(state.timerSeconds);
+            document.getElementById('final-max-streak').textContent = state.maxStreak;
+
+            setTimeout(() => {
+                victoryModalEl.classList.add('active');
+            }, 450);
+        }
+
+        /* ==========================================================================
+           EVENT LISTENERS FOR CONTROLS
+           ========================================================================== */
+        modeToggleBtn.addEventListener('click', () => {
+            state.hardcoreMode = !state.hardcoreMode;
+            document.body.classList.toggle('hardcore-mode', state.hardcoreMode);
+            
+            if (state.hardcoreMode) {
+                modeToggleBtn.classList.add('hardcore-active');
+                modeToggleBtn.innerHTML = '<span>Mode: Hardcore (No Hints)</span>';
+                setStatusMessage('Simulated Universe Hardcore Activated: Path lore hints concealed (+50% base score).', 'error');
+            } else {
+                modeToggleBtn.classList.remove('hardcore-active');
+                modeToggleBtn.innerHTML = '<span>Mode: Normal</span>';
+                setStatusMessage('Normal Mode Activated: Data Bank lore hints visible.', 'cyan');
+            }
+        });
+
+        resetBtn.addEventListener('click', initGame);
+        playAgainBtn.addEventListener('click', initGame);
+
+        /* ==========================================================================
+           AMBIENT STARFIELD CANVAS ANIMATION
+           ========================================================================== */
+        function initStarfield() {
+            const canvas = document.getElementById('starfield-canvas');
+            const ctx = canvas.getContext('2d');
+            let stars = [];
+
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                createStars();
+            }
+
+            function createStars() {
+                const count = Math.floor((canvas.width * canvas.height) / 9000);
+                stars = [];
+                for (let i = 0; i < count; i++) {
+                    stars.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        radius: Math.random() * 1.6 + 0.3,
+                        alpha: Math.random() * 0.8 + 0.2,
+                        delta: (Math.random() * 0.015 + 0.004) * (Math.random() < 0.5 ? 1 : -1),
+                        isGold: Math.random() < 0.22 // 22% Astral Gold stars, rest Celestial White/Cyan
+                    });
+                }
+            }
+
+            function animateStars() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                stars.forEach(star => {
+                    star.alpha += star.delta;
+                    if (star.alpha <= 0.15 || star.alpha >= 0.95) {
+                        star.delta *= -1;
+                    }
+                    ctx.beginPath();
+                    ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = star.isGold 
+                        ? `rgba(230, 195, 122, ${star.alpha})` 
+                        : `rgba(190, 225, 255, ${star.alpha})`;
+                    ctx.fill();
+                });
+                requestAnimationFrame(animateStars);
+            }
+
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+            animateStars();
+        }
+
+        // Boot application on load
+        window.onload = () => {
+            initStarfield();
+            initGame();
+        };
+    </script>
+</body>
+</html>
