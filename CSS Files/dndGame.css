@@ -1,0 +1,762 @@
+:root {
+            /* Deep Space Backgrounds */
+            --bg-void: #07090f;
+            --bg-nebula-dark: #0d121f;
+            --bg-nebula-accent: #182036;
+            
+            /* Frosted Glass Panels */
+            --glass-bg: rgba(16, 22, 38, 0.72);
+            --glass-bg-hover: rgba(24, 34, 58, 0.88);
+            --glass-border: rgba(230, 195, 122, 0.28);
+            --glass-border-bright: rgba(230, 195, 122, 0.75);
+
+            /* Signature HSR Accents */
+            --astral-gold: #e6c37a;
+            --astral-gold-dim: #9e8249;
+            --astral-gold-glow: rgba(230, 195, 122, 0.45);
+            
+            --celestial-cyan: #4cc9f0;
+            --celestial-cyan-glow: rgba(76, 201, 240, 0.45);
+            
+            --crimson-error: #ff4d6d;
+            --crimson-glow: rgba(255, 77, 109, 0.5);
+            
+            --emerald-success: #38b000;
+
+            /* Typography */
+            --font-display: 'Cinzel', serif;
+            --font-hud: 'Rajdhani', sans-serif;
+            --text-primary: #f0f4f8;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+
+            /* Geometry / Chamfered Corners */
+            --chamfer-sm: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+            --chamfer-md: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px);
+            --chamfer-lg: polygon(22px 0, 100% 0, 100% calc(100% - 22px), calc(100% - 22px) 100%, 0 100%, 0 22px);
+        }
+
+        /* ==========================================================================
+           GLOBAL RESET & COSMIC BACKGROUND
+           ========================================================================== */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body {
+            font-family: var(--font-hud);
+            background-color: var(--bg-void);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            line-height: 1.4;
+        }
+
+        /* Starfield Canvas Layer */
+        #starfield-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            background: radial-gradient(circle at 20% 25%, #161e35 0%, #0b0e17 55%, #06080d 100%);
+        }
+
+        /* Ambient Nebula Glow Overlay */
+        .nebula-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background: 
+                radial-gradient(ellipse at 80% 15%, rgba(76, 201, 240, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 15% 85%, rgba(230, 195, 122, 0.07) 0%, transparent 50%);
+        }
+
+        /* Main Application Wrapper */
+        .app-container {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        /* ==========================================================================
+           TOP HUD HEADER (SIMULATED UNIVERSE TERMINAL)
+           ========================================================================== */
+        .hud-header {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            clip-path: var(--chamfer-md);
+            padding: 1rem 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+
+        /* Decorative Gold Top Accent Line */
+        .hud-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 14px;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--astral-gold), var(--celestial-cyan), transparent);
+        }
+
+        .title-block {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+        }
+
+        .astral-emblem {
+            width: 42px;
+            height: 42px;
+            color: var(--astral-gold);
+            filter: drop-shadow(0 0 8px var(--astral-gold-glow));
+            flex-shrink: 0;
+            animation: slowSpin 30s linear infinite;
+        }
+
+        @keyframes slowSpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .title-text h1 {
+            font-family: var(--font-display);
+            font-size: clamp(1.15rem, 2.5vw, 1.65rem);
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            color: var(--astral-gold);
+            text-shadow: 0 0 12px var(--astral-gold-glow);
+            text-transform: uppercase;
+        }
+
+        .title-text .subtitle {
+            font-size: 0.85rem;
+            color: var(--celestial-cyan);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        /* HUD Telemetry Stats */
+        .hud-stats {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .stat-box {
+            background: rgba(10, 14, 24, 0.75);
+            border: 1px solid rgba(76, 201, 240, 0.25);
+            clip-path: var(--chamfer-sm);
+            padding: 0.4rem 0.9rem;
+            min-width: 95px;
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--text-secondary);
+            display: block;
+        }
+
+        .stat-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .stat-value.gold { color: var(--astral-gold); }
+        .stat-value.cyan { color: var(--celestial-cyan); }
+
+        /* Controls & Mode Toggle */
+        .hud-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+        }
+
+        .hsr-btn {
+            background: linear-gradient(135deg, rgba(230, 195, 122, 0.15), rgba(230, 195, 122, 0.05));
+            border: 1px solid var(--astral-gold);
+            color: var(--astral-gold);
+            font-family: var(--font-hud);
+            font-weight: 700;
+            font-size: 0.85rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 0.55rem 1rem;
+            clip-path: var(--chamfer-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .hsr-btn:hover {
+            background: var(--astral-gold);
+            color: var(--bg-void);
+            box-shadow: 0 0 15px var(--astral-gold-glow);
+        }
+
+        .hsr-btn.hardcore-active {
+            background: linear-gradient(135deg, rgba(255, 77, 109, 0.25), rgba(255, 77, 109, 0.1));
+            border-color: var(--crimson-error);
+            color: #ff8fa3;
+            box-shadow: 0 0 12px var(--crimson-glow);
+        }
+
+        .hsr-btn.hardcore-active:hover {
+            background: var(--crimson-error);
+            color: #fff;
+        }
+
+        /* ==========================================================================
+           INSTRUCTION BANNER / STATUS FEEDBACK BAR
+           ========================================================================== */
+        .status-banner {
+            background: rgba(13, 18, 31, 0.8);
+            border-left: 3px solid var(--celestial-cyan);
+            border-right: 3px solid var(--celestial-cyan);
+            padding: 0.55rem 1rem;
+            text-align: center;
+            font-size: 0.95rem;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .status-banner.highlight-cyan {
+            color: var(--celestial-cyan);
+            background: rgba(76, 201, 240, 0.12);
+        }
+
+        .status-banner.highlight-gold {
+            color: var(--astral-gold);
+            border-color: var(--astral-gold);
+            background: rgba(230, 195, 122, 0.12);
+        }
+
+        .status-banner.highlight-error {
+            color: var(--crimson-error);
+            border-color: var(--crimson-error);
+            background: rgba(255, 77, 109, 0.12);
+        }
+
+        /* ==========================================================================
+           MAIN GAME BOARD LAYOUT
+           ========================================================================== */
+        .game-workspace {
+            display: grid;
+            grid-template-columns: 340px 1fr;
+            gap: 1.25rem;
+            align-items: start;
+        }
+
+        @media (max-width: 960px) {
+            .game-workspace {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Section Panels */
+        .panel-section {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            clip-path: var(--chamfer-md);
+            padding: 1.15rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(230, 195, 122, 0.2);
+            padding-bottom: 0.65rem;
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            color: var(--astral-gold);
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-tag {
+            font-size: 0.72rem;
+            color: var(--celestial-cyan);
+            background: rgba(76, 201, 240, 0.12);
+            padding: 0.15rem 0.5rem;
+            border: 1px solid rgba(76, 201, 240, 0.3);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        /* ==========================================================================
+           AEON ROSTER (DRAGGABLE CARDS)
+           ========================================================================== */
+        .aeon-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+        }
+
+        @media (max-width: 960px) {
+            .aeon-grid {
+                grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
+            }
+        }
+
+        .aeon-card {
+            background: linear-gradient(145deg, rgba(24, 32, 54, 0.9), rgba(12, 16, 28, 0.95));
+            border: 1px solid rgba(230, 195, 122, 0.35);
+            clip-path: var(--chamfer-sm);
+            padding: 0.75rem 0.6rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.45rem;
+            cursor: grab;
+            transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), 
+                        border-color 0.2s ease, 
+                        box-shadow 0.2s ease,
+                        background 0.2s ease;
+            position: relative;
+            touch-action: manipulation;
+        }
+
+        .aeon-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--astral-gold);
+            box-shadow: 0 6px 20px rgba(230, 195, 122, 0.25);
+            background: linear-gradient(145deg, rgba(34, 46, 76, 0.95), rgba(16, 22, 38, 0.98));
+        }
+
+        .aeon-card:active {
+            cursor: grabbing;
+        }
+
+        /* Dragging & Tap-Selected States */
+        .aeon-card.dragging {
+            opacity: 0.45;
+            transform: scale(0.96);
+        }
+
+        .aeon-card.selected {
+            border-color: var(--celestial-cyan);
+            background: linear-gradient(145deg, rgba(20, 52, 74, 0.95), rgba(12, 24, 38, 0.98));
+            box-shadow: 0 0 18px var(--celestial-cyan-glow);
+            transform: translateY(-3px) scale(1.03);
+        }
+
+        .aeon-card.selected::after {
+            content: 'SELECTED';
+            position: absolute;
+            top: 3px;
+            right: 6px;
+            font-size: 0.58rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            color: var(--celestial-cyan);
+        }
+
+        .aeon-sigil {
+            width: 38px;
+            height: 38px;
+            color: var(--astral-gold);
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+
+        .aeon-card:hover .aeon-sigil {
+            transform: scale(1.1);
+            filter: drop-shadow(0 0 6px var(--astral-gold-glow));
+        }
+
+        .aeon-card.selected .aeon-sigil {
+            color: var(--celestial-cyan);
+            filter: drop-shadow(0 0 8px var(--celestial-cyan-glow));
+        }
+
+        .aeon-name {
+            font-family: var(--font-display);
+            font-size: 0.92rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            color: var(--text-primary);
+            text-align: center;
+        }
+
+        .aeon-epithet {
+            font-size: 0.68rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            text-align: center;
+        }
+
+        /* Empty Roster State */
+        .roster-complete {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 2rem 1rem;
+            color: var(--astral-gold);
+            font-family: var(--font-display);
+            font-size: 1.05rem;
+            letter-spacing: 0.08em;
+        }
+
+        /* ==========================================================================
+           PATHS MATRIX (DROP ZONES)
+           ========================================================================== */
+        .paths-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+            gap: 0.9rem;
+        }
+
+        .path-slot {
+            background: rgba(11, 15, 26, 0.78);
+            border: 1px dashed rgba(76, 201, 240, 0.35);
+            clip-path: var(--chamfer-md);
+            padding: 0.95rem;
+            min-height: 128px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.25s ease;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .path-slot:hover:not(.matched) {
+            border-color: var(--celestial-cyan);
+            background: rgba(18, 28, 48, 0.85);
+        }
+
+        /* Drag Hover State */
+        .path-slot.drag-over:not(.matched) {
+            border-style: solid;
+            border-color: var(--celestial-cyan);
+            background: rgba(76, 201, 240, 0.14);
+            box-shadow: inset 0 0 20px rgba(76, 201, 240, 0.2), 0 0 15px var(--celestial-cyan-glow);
+            transform: scale(1.02);
+        }
+
+        /* Matched / Aligned State */
+        .path-slot.matched {
+            border-style: solid;
+            border-color: var(--astral-gold);
+            background: linear-gradient(145deg, rgba(230, 195, 122, 0.16), rgba(16, 22, 38, 0.92));
+            box-shadow: 0 0 20px rgba(230, 195, 122, 0.22);
+            cursor: default;
+            animation: alignPulse 0.6s ease-out;
+        }
+
+        @keyframes alignPulse {
+            0% { box-shadow: 0 0 0 0 rgba(230, 195, 122, 0.8); transform: scale(1.04); }
+            100% { box-shadow: 0 0 20px rgba(230, 195, 122, 0.22); transform: scale(1); }
+        }
+
+        /* Mismatch / Error Shake Animation */
+        .path-slot.error-shake {
+            border-style: solid;
+            border-color: var(--crimson-error);
+            background: rgba(255, 77, 109, 0.18);
+            box-shadow: 0 0 20px var(--crimson-glow);
+            animation: hsrShake 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+        }
+
+        @keyframes hsrShake {
+            10%, 90% { transform: translate3d(-2px, 0, 0); }
+            20%, 80% { transform: translate3d(4px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-6px, 0, 0); }
+            40%, 60% { transform: translate3d(6px, 0, 0); }
+        }
+
+        .path-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+        }
+
+        .path-title {
+            font-family: var(--font-display);
+            font-size: 1.05rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            color: var(--celestial-cyan);
+            text-transform: uppercase;
+        }
+
+        .path-slot.matched .path-title {
+            color: var(--astral-gold);
+        }
+
+        .path-status-badge {
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 0.15rem 0.45rem;
+            border-radius: 2px;
+            background: rgba(76, 201, 240, 0.12);
+            color: var(--celestial-cyan);
+        }
+
+        .path-slot.matched .path-status-badge {
+            background: rgba(230, 195, 122, 0.22);
+            color: var(--astral-gold);
+        }
+
+        .path-hint {
+            font-size: 0.84rem;
+            color: var(--text-secondary);
+            margin-top: 0.45rem;
+            line-height: 1.35;
+            transition: opacity 0.25s ease;
+        }
+
+        /* Hardcore Mode hides lore hints */
+        body.hardcore-mode .path-hint {
+            display: none;
+        }
+
+        .drop-placeholder {
+            margin-top: 0.65rem;
+            padding: 0.4rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        /* Matched Aeon Display inside Path Slot */
+        .aligned-aeon-banner {
+            margin-top: 0.65rem;
+            padding: 0.45rem 0.65rem;
+            background: rgba(10, 14, 24, 0.85);
+            border: 1px solid var(--astral-gold);
+            clip-path: var(--chamfer-sm);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .aligned-aeon-banner svg {
+            width: 26px;
+            height: 26px;
+            color: var(--astral-gold);
+            flex-shrink: 0;
+        }
+
+        .aligned-aeon-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .aligned-aeon-name {
+            font-family: var(--font-display);
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--astral-gold);
+        }
+
+        .aligned-aeon-sub {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+        }
+
+        /* ==========================================================================
+           FLOATING SCORE POPUP FEEDBACK
+           ========================================================================== */
+        .score-floater {
+            position: fixed;
+            pointer-events: none;
+            font-family: var(--font-hud);
+            font-weight: 800;
+            font-size: 1.25rem;
+            z-index: 100;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+            animation: floatUpFade 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        @keyframes floatUpFade {
+            0% { opacity: 1; transform: translate(-50%, 0) scale(0.9); }
+            50% { opacity: 1; transform: translate(-50%, -28px) scale(1.1); }
+            100% { opacity: 0; transform: translate(-50%, -52px) scale(1); }
+        }
+
+        /* ==========================================================================
+           VICTORY / SIMULATED UNIVERSE COMPLETION MODAL
+           ========================================================================== */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(5, 7, 13, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.25rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.35s ease;
+        }
+
+        .modal-backdrop.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .victory-modal {
+            background: linear-gradient(160deg, rgba(22, 30, 52, 0.96), rgba(10, 14, 24, 0.98));
+            border: 1px solid var(--astral-gold);
+            clip-path: var(--chamfer-lg);
+            max-width: 480px;
+            width: 100%;
+            padding: 2rem 1.75rem;
+            text-align: center;
+            box-shadow: 0 0 50px rgba(230, 195, 122, 0.3);
+            transform: scale(0.92);
+            transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+            position: relative;
+        }
+
+        .modal-backdrop.active .victory-modal {
+            transform: scale(1);
+        }
+
+        .modal-subtitle {
+            font-size: 0.8rem;
+            letter-spacing: 0.2em;
+            color: var(--celestial-cyan);
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 0.35rem;
+        }
+
+        .modal-title {
+            font-family: var(--font-display);
+            font-size: 1.85rem;
+            font-weight: 800;
+            color: var(--astral-gold);
+            text-shadow: 0 0 15px var(--astral-gold-glow);
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-rank-badge {
+            display: inline-block;
+            margin: 0.5rem 0 1.25rem;
+            padding: 0.35rem 1.1rem;
+            background: rgba(230, 195, 122, 0.15);
+            border: 1px solid var(--astral-gold);
+            clip-path: var(--chamfer-sm);
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            color: var(--astral-gold);
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .result-item {
+            background: rgba(8, 11, 20, 0.75);
+            border: 1px solid rgba(76, 201, 240, 0.25);
+            clip-path: var(--chamfer-sm);
+            padding: 0.75rem;
+        }
+
+        .result-item .label {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            display: block;
+        }
+
+        .result-item .val {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .result-item .val.gold { color: var(--astral-gold); }
+        .result-item .val.cyan { color: var(--celestial-cyan); }
+
+        .modal-actions {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+        .hsr-btn-primary {
+            background: linear-gradient(135deg, var(--astral-gold), #c89d4c);
+            border: none;
+            color: #07090f;
+            font-family: var(--font-hud);
+            font-weight: 800;
+            font-size: 1rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 0.75rem 1.75rem;
+            clip-path: var(--chamfer-sm);
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .hsr-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 22px var(--astral-gold-glow);
+        }
