@@ -1,0 +1,25 @@
+.container {
+       display: flex;
+       max-width: 900px;
+       margin: 20px auto;
+       gap: 20px;
+       padding: 0 10px;
+    }
+.article {
+       background-color: white;
+       opacity: 1;
+       margin-bottom: 15px;
+       box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+       background-color: var(--surface-glass);
+       backdrop-filter: blur(10px);
+       -webkit-backdrop-filter: blur(10px);
+       border: 1px solid rgba(255, 75, 144, 0.4);
+       border-radius: 16px;
+       padding: 32px 36px;
+       box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+       text-align: left;
+       }
+
+.article p + p {
+    margin-top: 16px;
+}
