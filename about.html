@@ -6,7 +6,7 @@
     <title>About</title>  
     <link rel="stylesheet" href="CSS Files/Style2.css">
     <link rel="stylesheet" href="CSS Files/Tabs.css">
-  <link rel="stylesheet" href="/resources/demos/style.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
      <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
      <script src="https://code.jquery.com/ui/1.14.2/jquery-ui.js"></script>
      <script>
@@ -15,6 +15,17 @@
   } );
      </script>
 <style>
+
+body {font-family: 'Segoe UI', Tahoma, Geneva, sans-serif;
+ margin: 0;
+ background-image: url(images/sunset-retrowave-palm-tree-digital-art-4k-wallpaper-uhdpaper.com-838@3@a.jpg);
+ background-position: center;
+ background-size: cover;
+ margin: 0;
+ min-height: 100;
+ color: #2c3e50; 
+}
+
 .panel {
   padding: 0 18px;
   background-color: white;
@@ -22,22 +33,24 @@
   overflow: hidden;
   transition: max-height 0.2s ease-out;
 }
+
+.tabsHeight {
+  margin-top: 130px;
+}
+
+.top-center-img {
+  position: absolute;
+  top: 50px;   
+  left: 50%;  
+  z-index: 10;
+  transform: translateX(-50%)
+}
 </style>
 
 </head>
 <body>
-  
-  <style>
-        body {font-family: 'Segoe UI', Tahoma, Geneva, sans-serif;
- margin: 0;
- background-image: url(images/sunset-retrowave-palm-tree-digital-art-4k-wallpaper-uhdpaper.com-838@3@a.jpg);
- background-position: center;
- background-size: cover;
- margin: 0;
- min-height: 100;
- color: #2c3e50;
-    }
-    </style>
+
+  <img src="images/About.png" alt="Home Banner" width="325" height="150" class="top-center-img">
 
     <nav class="navbar" role="navigation" aria-label="Main Navigation"> 
         <ul class="nav-list"> 
@@ -48,29 +61,40 @@
             <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li> 
         </ul> 
     </nav>
-    <center>
-        <h1 class = "gradientTextHeader">About Me</h1>
-    </center>
 
-   <div id="tabs">
+   <div id="tabs" a class="tabsHeight">
   <ul>
-    <li><a href="#tabs-1">Nunc tincidunt</a></li>
-    <li><a href="#tabs-2">Proin dolor</a></li>
-    <li><a href="#tabs-3">Aenean lacinia</a></li>
+    <li><a href="#tabs-1">About Me</a></li>
+    <li><a href="#tabs-2">Hobbies</a></li>
+    <li><a href="#tabs-3">Favorite Games</a></li>
+    <li><a href="#tabs-4">Favorite Music</a></li>
+    <li><a href="#tabs-5">Favorite Series/Movies</a></li>
   </ul>
   <div id="tabs-1">
+    <h2 class="gradientTextSubHeader">About Me</h2>
     <p>Proin elit arcu, rutrum commodo, vehicula tempus, commodo a, risus. Curabitur nec arcu. Donec sollicitudin mi sit amet mauris. Nam elementum quam ullamcorper ante. Etiam aliquet massa et lorem. Mauris dapibus lacus auctor risus. Aenean tempor ullamcorper leo. Vivamus sed magna quis ligula eleifend adipiscing. Duis orci. Aliquam sodales tortor vitae ipsum. Aliquam nulla. Duis aliquam molestie erat. Ut et mauris vel pede varius sollicitudin. Sed ut dolor nec orci tincidunt interdum. Phasellus ipsum. Nunc tristique tempus lectus.</p>
   </div>
   <div id="tabs-2">
+    <h2 class="gradientTextSubHeader">Hobbies</h2>
     <p>Morbi tincidunt, dui sit amet facilisis feugiat, odio metus gravida ante, ut pharetra massa metus id nunc. Duis scelerisque molestie turpis. Sed fringilla, massa eget luctus malesuada, metus eros molestie lectus, ut tempus eros massa ut dolor. Aenean aliquet fringilla sem. Suspendisse sed ligula in ligula suscipit aliquam. Praesent in eros vestibulum mi adipiscing adipiscing. Morbi facilisis. Curabitur ornare consequat nunc. Aenean vel metus. Ut posuere viverra nulla. Aliquam erat volutpat. Pellentesque convallis. Maecenas feugiat, tellus pellentesque pretium posuere, felis lorem euismod felis, eu ornare leo nisi vel felis. Mauris consectetur tortor et purus.</p>
   </div>
   <div id="tabs-3">
+    <h2 class="gradientTextSubHeader">Favorite Games</h2>
+    <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
+    <p>Duis cursus. Maecenas ligula eros, blandit nec, pharetra at, semper at, magna. Nullam ac lacus. Nulla facilisi. Praesent viverra justo vitae neque. Praesent blandit adipiscing velit. Suspendisse potenti. Donec mattis, pede vel pharetra blandit, magna ligula faucibus eros, id euismod lacus dolor eget odio. Nam scelerisque. Donec non libero sed nulla mattis commodo. Ut sagittis. Donec nisi lectus, feugiat porttitor, tempor ac, tempor vitae, pede. Aenean vehicula velit eu tellus interdum rutrum. Maecenas commodo. Pellentesque nec elit. Fusce in lacus. Vivamus a libero vitae lectus hendrerit hendrerit.</p>
+  </div>
+  <div id="tabs-4">
+    <h2 class="gradientTextSubHeader">Favorite Music</h2>
+    <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
+    <p>Duis cursus. Maecenas ligula eros, blandit nec, pharetra at, semper at, magna. Nullam ac lacus. Nulla facilisi. Praesent viverra justo vitae neque. Praesent blandit adipiscing velit. Suspendisse potenti. Donec mattis, pede vel pharetra blandit, magna ligula faucibus eros, id euismod lacus dolor eget odio. Nam scelerisque. Donec non libero sed nulla mattis commodo. Ut sagittis. Donec nisi lectus, feugiat porttitor, tempor ac, tempor vitae, pede. Aenean vehicula velit eu tellus interdum rutrum. Maecenas commodo. Pellentesque nec elit. Fusce in lacus. Vivamus a libero vitae lectus hendrerit hendrerit.</p>
+  </div>
+  <div id="tabs-5">
+    <h2 class="gradientTextSubHeader">Favorite Series/Movies</h2>
     <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
     <p>Duis cursus. Maecenas ligula eros, blandit nec, pharetra at, semper at, magna. Nullam ac lacus. Nulla facilisi. Praesent viverra justo vitae neque. Praesent blandit adipiscing velit. Suspendisse potenti. Donec mattis, pede vel pharetra blandit, magna ligula faucibus eros, id euismod lacus dolor eget odio. Nam scelerisque. Donec non libero sed nulla mattis commodo. Ut sagittis. Donec nisi lectus, feugiat porttitor, tempor ac, tempor vitae, pede. Aenean vehicula velit eu tellus interdum rutrum. Maecenas commodo. Pellentesque nec elit. Fusce in lacus. Vivamus a libero vitae lectus hendrerit hendrerit.</p>
   </div>
 </div>
 
-</body>
 <footer>
       <div a class="footerbg">
       <h2 class="footerHeader">Let's Connect!</h2>
@@ -99,4 +123,5 @@
 
         <p class="subfooter"><strong class="textPreset1">2026 TechCooper Solutions | Teacher: Ma'am Jovy</strong></p>
     </footer>
+</body>
 </html>
