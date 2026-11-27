@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Two Numbers</title>
+</head>
+<body>
+
+<center>
+    <h2>Add Two Numbers</h2>
+
+    First Number:
+    <input type="text" id="txtFirst"><br><br>
+
+    Second Number:
+    <input type="text" id="txtSecond"><br><br>
+
+    Result:
+    <input type="text" id="txtResults"><br><br>
+
+    <button id="btnCompute">Compute</button>
+    <button id="btnReset">Reset</button>
+</center>
+
+<script>
+// Match names from your code
+textField1 = txtFirst
+textField2 = txtSecond
+textField3 = txtResults
+button1 = btnCompute
+button2 = btnReset
+
+// Get values from inputs
+const firstNumber = document.getElementById("txtFirst").value;
+const secondNumber = document.getElementById("txtSecond").value;
+var result = 0;
+
+function getSum() {
+    // Turn text into number
+    const fNum = parseInt(document.getElementById("txtFirst").value, 10);
+    const sNum = parseInt(document.getElementById("txtSecond").value, 10);
+
+    // Process — add them
+    result = fNum + sNum;
+
+    // Show result
+    document.getElementById("txtResults").value = result;
+    alert(" hello");
+}
+
+// Reset button
+document.getElementById("btnReset").addEventListener("click", function() {
+    document.getElementById("txtFirst").value = "";
+    document.getElementById("txtSecond").value = "";
+    document.getElementById("txtResults").value = "";
+});
+
+// Make Compute work
+document.getElementById("btnCompute").addEventListener('click', getSum);
+</script>
+
+</body>
+</html> 
