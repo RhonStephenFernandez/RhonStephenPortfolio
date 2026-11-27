@@ -1,0 +1,31 @@
+.parent {
+  display: flex;
+  flex-direction: row;
+  align-items: start;
+  width: 45%;
+  min-height: 300px;
+  margin: 0 auto;
+  padding: 1px;
+  border: 5px solid rgb(128, 0, 79);
+  background-image: url("../images/nihilux-aeon-aha.gif");
+  background-position: center;
+}
+
+.child {
+  flex: 1 1 15%;
+  min-height: 300px;
+  margin: 5px;
+  background: red;
+  border: solid white;
+  text-align: center;
+}
+
+.child:nth-child(2) {
+  background: rgb(255, 250, 244);
+  border-color: darkred;
+}
+
+.child:nth-child(3) {
+  background: darkred;
+  border-color: red;
+}
