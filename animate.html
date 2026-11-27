@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src=
+"https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js">
+    </script>
+    <script src=
+"https://code.jquery.com/jquery-1.10.2.js">
+    </script>
+    <!--jQuery code to show animate() method-->
+    <script>
+        
+            $(document).ready(function () {
+                $("#b1").click(function () {
+                    $("#box").animate({
+                        width: "300px"
+                    });
+                    $("#box").animate({
+                        height: "300px"
+                    });
+                });
+            });
+    </script>
+
+    <script>
+            $(document).ready(function () {
+    
+                    $("#b2").click(function () {
+                        $("div").animate({
+                            height: 200
+                        }, 2000);
+                        $("div").animate({
+                            width: 200
+                        }, 2000);
+                        $("div").animate({
+                            height: 100
+                        }, 2000);
+                        $("div").animate({
+                            width: 100
+                        }, 2000);
+                        $("div").animate({
+                            height: 200
+                        }, 2000);
+                        $("div").animate({
+                            width: 200
+                        }, 2000);
+                        $("div").animate({
+                            height: 100
+                        }, 2000);
+                        $("div").animate({
+                            width: 100
+                        }, 2000);
+                    });
+
+                    $("#b3").click(function () {
+                        $("div").clearQueue();
+                    });
+            });
+    </script>
+
+<style>
+        div {
+            background: green;
+            height: 100px;
+            width: 100px;
+        }
+
+        button {
+            margin-top: 10px;
+        }
+</style>
+
+    <style>
+        div {
+            width: 100px;
+            height: 100px;
+            background-color: green;
+        }
+
+        #b1 {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+<p>1. Animate</p>
+    <div id="box"></div>
+    <!-- click on this button -->
+    <button id="b1">Click Here !</button>
+
+
+<p>2. ClearQueue</p>
+    <div></div>
+    <!-- click on this button to start the animation -->
+    <button id="b2">Start !</button>
+    <!-- click on this button to stop the animation at
+            given situation -->
+    <button id="b3">Stop !</button>
+</body>
+
+</html>
