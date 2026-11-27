@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Landing Page</title>
+    <title>Home | Landing Page</title>
     <link rel="stylesheet" href="CSS Files/Articles.css">
     <link rel="stylesheet" href="CSS Files/Style2.css">
     <style>
@@ -22,9 +22,24 @@
         footer {
             text-align: center;
         }
+
+        .top-center-img {
+            position: absolute;
+            top: 50px;   
+            left: 50%;  
+            z-index: 10;
+            transform: translateX(-50%)
+        }
+        ul {
+            list-style: none;
+        }
+
     </style>
 </head>
 <body>
+
+    <img src="images/Home.png" alt="Home Banner" width="325" height="160" class="top-center-img">
+
     <nav class="navbar" role="navigation" aria-label="Main Navigation">
         <ul class="nav-list">
             <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
@@ -36,15 +51,20 @@
     </nav>
 
     <main>
-        <header class="page-hero">
-            <h1 class="gradientTextHeader">HOME</h1>
-        </header>
         <div class="container">
             <article class="article">
                 <h2 class="textPreset2">Welcome to my Website!</h2>
-                <p class="myTextWhite">This website is a school project of mine, and I greatly appreciate your visit! I hope to learn more about programming in order to make my projects better while simultaneously learning about other things. This humble website is only the start of more projects to come, and I'm confident that my future projects will be so much better than the previous ones.</p>
+                <p class="white">This website is a school project of mine, and I greatly appreciate your visit! I hope to learn more about programming in order to make my projects better while simultaneously learning about other things. This humble website is only the start of more projects to come, and I'm confident that my future projects will be so much better than the previous ones.</p>
                 <p class="textPreset1"><strong>Feel free to explore this website!</strong></p>
             </article>
+        </div>
+        <div>
+        <nav class="shortcutBar">
+            <ul class="shortcut">
+                <li class="nav-item"><a class="gradientTextSubHeader link box" href="about.html"><b>ABOUT</b></a></li>
+                <li class="nav-item"><a class="gradientTextSubHeader link box" href="portfolio.html"><b>PORTFOLIO</b></a></li>
+                <li class="nav-item"><a class="gradientTextSubHeader link box" href="contact.html"><b>CONTACTS</b></a></li>
+            </ul>
         </div>
     </main>
 
