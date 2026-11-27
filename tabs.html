@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="CSS Files/Style2.css">
+    <link rel="stylesheet" href="CSS Files/Articles.css">
+    <link rel="stylesheet" href="CSS Files/Tabs.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+     <script src="https://code.jquery.com/ui/1.14.2/jquery-ui.js"></script>
+     <script>
+         $( function() {
+    $( "#tabs" ).tabs();
+  } );
+     </script>
+
+<style>
+
+body {font-family: 'Segoe UI', Tahoma, Geneva, sans-serif;
+ margin: 0;
+ min-height: 100;
+ color: #2c3e50; 
+}
+
+.panel {
+  padding: 0 18px;
+  background-color: white;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+}
+
+.tabsHeight {
+  margin-top: 130px;
+}
+
+.top-center-img {
+  position: absolute;
+  top: 50px;   
+  left: 50%;  
+  z-index: 10;
+  transform: translateX(-50%)
+}
+</style>
+
+</head>
+<body>
+
+   <div id="tabs" a class="tabsHeight">
+  <ul>
+    <li><a href="#tabs-1">About Me</a></li>
+    <li><a href="#tabs-2">Hobbies</a></li>
+    <li><a href="#tabs-3">Favorite Games</a></li>
+    <li><a href="#tabs-4">Favorite Music & Artists</a></li>
+    <li><a href="#tabs-5">Favorite Series/Movies</a></li>
+  </ul>
+  <div id="tabs-1">
+    <h2 class="gradientTextSubHeader">About Me</h2>
+    <p>I am a 17-year old Grade 12 ICT Programming student at Gov. Juanito Reyes Remulla Senior High School who's currently learning multiple programming languages such as Java, JavaScript, and more. I currently live at Salinas I, Bacoor, Cavite.</p>
+  </div>
+  <div id="tabs-2">
+    <h2 class="gradientTextSubHeader">Hobbies</h2>
+    <p>My hobbies are playing online games, listening to music, and watching anime series or movies. I also draw sometimes, both traditionally and digitally. I'm currently trying out animating.
+  </div>
+  <div id="tabs-3">
+    <h2 class="gradientTextSubHeader">Favorite Games</h2>
+    <p>Any games made by Rockstar</p><p>Any games made by Hoyoverse</p><p>MMORPG games</p><p>Interactive visual novels</p><p>Idk what else to put here ngl, I play almost any game, and they're all good.</p>
+  </div>
+  <div id="tabs-4">
+    <h2 class="gradientTextSubHeader">Favorite Music & Artists</h2>
+    <h3>Music</h3>
+    <p>Halzion/Harujion, Kaibutsu, Tabun, Idol, Watch me!, Specialz, Kaikai Kitan, Dramaturgy, Sway to My Beat in Cosmos, Hope Is the Thing With Feathers, Only by Chasing the Wind, Monodrama, Ravings, Midnight Memories, Set Sail, more unlisted</p>
+    <h3>Artists</h3>
+    <p>YOASOBI, Eve, Alexandros, Rokudenashi, Yunomi, HoneyWorks, HOYO-MiX, LEVEL NINE, Cosmograph, INABAKUMORI, King Gnu, more unlisted</p>
+  </div>
+  <div id="tabs-5">
+    <h2 class="gradientTextSubHeader">Favorite Series/Movies</h2>
+    <h3>Series</h2>
+    <p>Shiboyugi, Eminence in Shadow, KonoSuba, Love Flops, Classroom of the Elite, 86 Eighty Six, Owari no Seraph, Akame ga Kill, Liar Liar, Amagi Brilliant Park, Danganronpa, Quintessential Quintuplets, Date A Live, more unlisted</p>
+    <h3>Movies</h2>
+    <p>Eminence in Shadow: Lost Echoes, Cosmic Princess Kaguya, The Ribbon Hero, more unlisted</p>
+  </div>
