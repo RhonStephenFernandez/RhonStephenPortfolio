@@ -3,11 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Landing Page</title>  
+    <title>Gallery | Landing Page</title>  
     <link rel="stylesheet" href="CSS Files/Style2.css">
     <link rel="stylesheet" href="CSS Files/Gallery.css">
-</head>
-<body>
 
     <style>
         body {font-family: 'Segoe UI', Tahoma, Geneva, sans-serif;
@@ -19,7 +17,20 @@
  min-height: 100;
  color: #2c3e50;
     }
+
+    .top-center-img {
+  position: absolute;
+  top: 50px;   
+  left: 50%;  
+  z-index: 10;
+  transform: translateX(-50%)
+}
     </style>
+
+</head>
+<body>
+
+  <img src="images/Gallery.png" alt="Home Banner" width="375" height="150" class="top-center-img">
 
     <nav class="navbar" role="navigation" aria-label="Main Navigation"> 
         <ul class="nav-list"> 
@@ -30,8 +41,6 @@
             <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
     </nav>
     <center>
-        <h1 class = "gradientTextHeader">Gallery</h1>
-        <br>
         <div class="carousel" id="carousel"> 
       <div class="slides"> 
         <figure class="slide"> 
@@ -132,8 +141,8 @@ slide">&#10094;</button>
   
     }); 
     </script> 
-</body>
-<footer>
+
+    <footer>
       <div a class="footerbg">
       <h2 class="footerHeader">Let's Connect!</h2>
         <p>Thank you for visiting my website! Connect with me on social media or reach out via email for collaborations and inquiries. Your support and feedback are greatly appreciated.</p>
@@ -161,5 +170,5 @@ slide">&#10094;</button>
 
         <p class="subfooter"><strong class="textPreset1">2026 TechCooper Solutions | Teacher: Ma'am Jovy</strong></p>
     </footer>
-</center>
+</body>
 </html>
