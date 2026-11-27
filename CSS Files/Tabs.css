@@ -862,6 +862,8 @@ body .ui-tooltip {
 .ui-widget {
 	font-family: Arial,Helvetica,sans-serif;
 	font-size: 1em;
+	margin-left: 400px;
+	margin-right: 400px;
 }
 .ui-widget .ui-widget {
 	font-size: 1em;
@@ -878,7 +880,7 @@ body .ui-tooltip {
 }
 .ui-widget-content {
 	border: 1px solid #dddddd;
-	background: #000000;
+	background: rgba(0, 0, 0, 0.7);
 	color: #ffffff;
 }
 .ui-widget-content a {
@@ -917,7 +919,7 @@ a.ui-button,
 a:link.ui-button,
 a:visited.ui-button,
 .ui-button {
-	color: #454545;
+	color: #ffffffa4;
 	text-decoration: none;
 }
 .ui-state-hover,
